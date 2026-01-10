@@ -14,23 +14,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- INTERCEPT.WORKS THEME ENGINE --- */
+        /* --- THEME ENGINE --- */
         :root {
-            --bg-navy: #1B2230;        /* Deep matte navy */
-            --card-navy: #232d3f;      /* Lighter navy for cards */
+            --bg-navy: #1B2230;
+            --card-navy: #232d3f;
             --text-white: #ffffff;
-            --text-slate: #94a3b8;     /* Muted grey */
+            --text-slate: #94a3b8;
             --text-blue-grey: #64748b; 
             
-            --accent-yellow: #FBBF24;  /* Gold/Yellow Accent */
-            --btn-blue: #2c4f7c;       /* Intercept Blue */
+            --accent-yellow: #FBBF24;
+            --btn-blue: #2c4f7c;
             --border-color: #2e3646;
 
             --ease: cubic-bezier(0.25, 1, 0.5, 1);
             --radius: 8px;
         }
 
-        /* --- GLOBAL RESET --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; }
         
         body {
@@ -78,7 +77,7 @@
         }
         .btn-exit:hover { background: var(--card-navy); color: white; border-color: white; }
 
-        /* --- MODAL (POP-UP) STYLES --- */
+        /* --- MODAL --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px);
@@ -107,7 +106,6 @@
             margin-left: auto; margin-right: auto;
         }
 
-        /* --- TYPOGRAPHY --- */
         h1 { 
             font-family: 'Oswald', sans-serif;
             font-size: 32px; font-weight: 700; 
@@ -131,7 +129,6 @@
             border-radius: var(--radius); border-left: 3px solid var(--accent-yellow);
         }
 
-        /* --- UI COMPONENTS --- */
         .btn {
             width: 100%; padding: 18px;
             border-radius: 50px;
@@ -164,7 +161,6 @@
         }
         .option-card span { font-size: 15px; color: var(--text-slate); }
 
-        /* --- UTILS --- */
         .view {
             position: absolute; top: 0; left: 0; width: 100%; min-height: 100%;
             padding: 24px; display: flex; flex-direction: column;
@@ -175,7 +171,6 @@
         .hidden { display: none !important; }
         .center-v { justify-content: center; }
 
-        /* Badge Style */
         .badge {
             display: inline-block; padding: 4px 8px; border-radius: 4px;
             border: 1px solid var(--border-color); color: var(--text-slate);
@@ -183,7 +178,6 @@
             margin-bottom: 16px; letter-spacing: 1px;
         }
 
-        /* Video Box */
         .video-box {
             width: 100%; aspect-ratio: 16/9; background: #000;
             border-radius: 8px; border: 1px solid var(--border-color);
@@ -223,11 +217,7 @@
             <div class="badge" style="border-color: var(--accent-yellow); color: var(--accent-yellow);">TRUSTED GUIDE</div>
             <div class="contact-name">MONTY ELSOM</div>
             <a href="tel:9719989285" class="contact-number">(971) 998-9285</a>
-            
-            <p style="font-size: 14px; margin-bottom: 24px;">
-                Available for a confidential conversation about your next steps.
-            </p>
-            
+            <p style="font-size: 14px; margin-bottom: 24px;">Available for a confidential conversation about your next steps.</p>
             <a href="tel:9719989285" class="btn btn-primary">CALL NOW</a>
             <button class="btn btn-ghost" onclick="app.closeModal()">CLOSE</button>
         </div>
@@ -242,20 +232,23 @@
         <div id="view-welcome" class="view active center-v">
             <div class="badge">Confidential Check v1.0</div>
             <h1>RELATIONAL<br>INTEGRITY CHECK</h1>
-            <p>A private tool for wives to assess risk and find clarity.</p>
+            <p>A private tool to assess risk, find clarity, and take action.</p>
             <div class="privacy-note"><strong>🔒 Private & Discreet:</strong> No names required. No data stored.</div>
             <br>
             <button class="btn btn-primary" onclick="app.goto('view-identity')">START REFLECTION</button>
         </div>
 
         <div id="view-identity" class="view center-v">
-            <h2>Who is this check for?</h2>
-            <div class="option-card" onclick="app.startCheck()">
-                <span>Myself (Wife / Partner)</span><span style="color:var(--accent-yellow);">→</span>
+            <h2>Who are you?</h2>
+            
+            <div class="option-card" onclick="app.startCheck('wife')">
+                <span>Wife / Partner</span><span style="color:var(--accent-yellow);">→</span>
             </div>
-            <div class="option-card" onclick="alert('Redirecting to Husbands Flow...')">
-                <span>A Husband / Man</span><span style="color:var(--text-blue-grey);">↗</span>
+            
+            <div class="option-card" onclick="app.startCheck('husband')">
+                <span>Husband / Man</span><span style="color:var(--text-blue-grey);">→</span>
             </div>
+            
             <button class="btn btn-ghost" onclick="app.goto('view-welcome')">Go Back</button>
         </div>
 
@@ -267,25 +260,26 @@
 
         <div id="view-loading" class="view center-v" style="text-align: center;">
             <div style="width: 50px; height: 50px; border: 4px solid var(--card-navy); border-top: 4px solid var(--accent-yellow); border-radius: 50%; animation: spin 1s infinite linear; margin: 0 auto 30px auto;"></div>
-            <h2 style="font-family: 'Oswald'; font-size: 24px; text-transform: uppercase;">Analyzing Patterns</h2>
-            <p>Checking indicators against healthy benchmarks.</p>
+            <h2 style="font-family: 'Oswald'; font-size: 24px; text-transform: uppercase;">Processing...</h2>
+            <p>Analyzing responses against healthy benchmarks.</p>
         </div>
 
         <div id="view-results" class="view">
             <div id="res-badge" class="badge" style="background:var(--accent-yellow); color:black; border:none;">STATUS</div>
-            <h1 id="res-title">YOU ARE NOT<br><span class="highlight">IMAGINING THINGS.</span></h1>
+            
+            <h1 id="res-title">TITLE HERE</h1>
             
             <div class="video-box">
                 <div class="play-btn">▶</div>
-                <div style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE FROM BRIT (3 MIN)</div>
+                <div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>
             </div>
 
             <div style="background:var(--card-navy); padding:20px; border-radius:8px; border-left:4px solid var(--accent-yellow); margin-bottom:24px;">
-                <p id="res-desc" style="margin:0; color:var(--text-white);">Result description...</p>
+                <p id="res-desc" style="margin:0; color:var(--text-white);">Description...</p>
             </div>
 
-            <button id="btn-cta-1" class="btn btn-primary">JOIN INTERCEPT</button>
-            <button id="btn-cta-2" class="btn btn-ghost">TALK WITH A GUIDE</button>
+            <button id="btn-cta-1" class="btn btn-primary">PRIMARY ACTION</button>
+            <button id="btn-cta-2" class="btn btn-ghost">SECONDARY ACTION</button>
             
             <div style="text-align:center; margin-top:20px;">
                 <a href="#" onclick="location.reload()" style="color:var(--text-blue-grey); font-size:12px; text-decoration:none;">RESTART CHECK</a>
@@ -301,45 +295,71 @@
             data: {
                 currentQ: 0,
                 score: 0,
-                questions: [
-                    { cat: "Digital Habits", txt: "When it comes to his devices (phone, laptop), how would you describe the atmosphere?", opts: [
-                        { v:1, t:"Totally open / Shared freely" },
-                        { v:2, t:"Mostly open" },
-                        { v:3, t:"Neutral / I don't really know" },
-                        { v:4, t:"Guarded / Screens turned away" },
-                        { v:5, t:"Secretive / Locked / Tense" }
-                    ]},
-                    { cat: "Clarity", txt: "How clear is his schedule regarding time away from home?", opts: [
-                        { v:1, t:"Completely clear" },
-                        { v:2, t:"Mostly clear" },
-                        { v:3, t:"Vague details" },
-                        { v:4, t:"Inconsistent stories" },
-                        { v:5, t:"Unaccounted blocks of time" }
-                    ]},
-                    { cat: "Reactions", txt: "If you walk into a room unexpectedly while he is on a device, what is the reaction?", opts: [
-                        { v:1, t:"Welcoming / No reaction" },
-                        { v:2, t:"Mild distraction" },
-                        { v:3, t:"Startled" },
-                        { v:4, t:"Visibly tense" },
-                        { v:5, t:"Defensive (snapping/hiding)" }
-                    ]},
-                    { cat: "Finances", txt: "How transparent is the financial situation?", opts: [
-                        { v:1, t:"Fully transparent" },
-                        { v:2, t:"Mostly open" },
-                        { v:3, t:"Unsure / He manages it" },
-                        { v:4, t:"Confusing gaps" },
-                        { v:5, t:"Hidden spending / Opaque" }
-                    ]},
-                    { cat: "Intuition", txt: "Reflecting on your own 'gut feeling' right now:", opts: [
-                        { v:1, t:"I feel safe" },
-                        { v:2, t:"I feel mostly okay" },
-                        { v:3, t:"I feel confused" },
-                        { v:4, t:"I feel anxious often" },
-                        { v:5, t:"Strong sense something is wrong" }
-                    ]}
-                ]
+                path: 'wife', // 'wife' or 'husband'
+                
+                // --- QUESTION BANK ---
+                questions: {
+                    // WIFE QUESTIONS
+                    wife: [
+                        { cat: "Digital Habits", txt: "When it comes to his devices, how would you describe the atmosphere?", opts: [
+                            { v:1, t:"Totally open / Shared freely" }, { v:2, t:"Mostly open" }, 
+                            { v:3, t:"Neutral / I don't really know" }, { v:4, t:"Guarded / Screens turned away" }, 
+                            { v:5, t:"Secretive / Locked / Tense" }
+                        ]},
+                        { cat: "Clarity", txt: "How clear is his schedule regarding time away from home?", opts: [
+                            { v:1, t:"Completely clear" }, { v:2, t:"Mostly clear" }, 
+                            { v:3, t:"Vague details" }, { v:4, t:"Inconsistent stories" }, 
+                            { v:5, t:"Unaccounted blocks of time" }
+                        ]},
+                        { cat: "Reactions", txt: "If you walk into a room unexpectedly while he is on a device, what is the reaction?", opts: [
+                            { v:1, t:"Welcoming / No reaction" }, { v:2, t:"Mild distraction" }, 
+                            { v:3, t:"Startled" }, { v:4, t:"Visibly tense" }, 
+                            { v:5, t:"Defensive (snapping/hiding)" }
+                        ]},
+                        { cat: "Finances", txt: "How transparent is the financial situation?", opts: [
+                            { v:1, t:"Fully transparent" }, { v:2, t:"Mostly open" }, 
+                            { v:3, t:"Unsure / He manages it" }, { v:4, t:"Confusing gaps" }, 
+                            { v:5, t:"Hidden spending / Opaque" }
+                        ]},
+                        { cat: "Intuition", txt: "Reflecting on your own 'gut feeling' right now:", opts: [
+                            { v:1, t:"I feel safe" }, { v:2, t:"I feel mostly okay" }, 
+                            { v:3, t:"I feel confused" }, { v:4, t:"I feel anxious often" }, 
+                            { v:5, t:"Strong sense something is wrong" }
+                        ]}
+                    ],
+
+                    // HUSBAND QUESTIONS (New)
+                    husband: [
+                        { cat: "Secrecy", txt: "Do you delete your browser history, use incognito mode, or hide apps to conceal activity?", opts: [
+                            { v:1, t:"Never / I live openly" }, { v:2, t:"Rarely" }, 
+                            { v:3, t:"Sometimes" }, { v:4, t:"Often" }, 
+                            { v:5, t:"Daily / Constantly" }
+                        ]},
+                        { cat: "Control", txt: "When you feel the urge to view pornography or act out, do you feel like you can stop?", opts: [
+                            { v:1, t:"Yes, I have full control" }, { v:2, t:"Mostly, but it's a struggle" }, 
+                            { v:3, t:"It's 50/50" }, { v:4, t:"I often feel powerless" }, 
+                            { v:5, t:"No, I feel trapped" }
+                        ]},
+                        { cat: "Impact", txt: "How is this behavior affecting your marriage or relationships?", opts: [
+                            { v:1, t:"It isn't / No impact" }, { v:2, t:"Minimal impact" }, 
+                            { v:3, t:"Causing some distance" }, { v:4, t:"Causing major conflict" }, 
+                            { v:5, t:"Destroying trust / Separated" }
+                        ]},
+                        { cat: "Escapism", txt: "Do you turn to screens or sexual acting out to cope with stress, anger, or loneliness?", opts: [
+                            { v:1, t:"Never" }, { v:2, t:"Rarely" }, 
+                            { v:3, t:"Sometimes" }, { v:4, t:"Frequently" }, 
+                            { v:5, t:"It is my primary coping mechanism" }
+                        ]},
+                        { cat: "Ownership", txt: "Are you hiding the extent of your struggle from your wife or others?", opts: [
+                            { v:1, t:"No, I am fully transparent" }, { v:2, t:"Mostly open, kept some details back" }, 
+                            { v:3, t:"I share only when asked" }, { v:4, t:"I hide most of it" }, 
+                            { v:5, t:"I am living a double life" }
+                        ]}
+                    ]
+                }
             },
 
+            // --- NAVIGATION ---
             goto: (viewId) => {
                 document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
                 document.getElementById(viewId).classList.add('active');
@@ -347,13 +367,20 @@
                 viewId === 'view-questions' ? prog.classList.remove('hidden') : prog.classList.add('hidden');
             },
 
-            startCheck: () => {
-                app.data.currentQ = 0; app.data.score = 0;
-                app.renderQuestion(); app.goto('view-questions');
+            // --- START LOGIC ---
+            startCheck: (type) => {
+                app.data.path = type; // Set path (wife or husband)
+                app.data.currentQ = 0; 
+                app.data.score = 0;
+                app.renderQuestion(); 
+                app.goto('view-questions');
             },
 
             renderQuestion: () => {
-                const q = app.data.questions[app.data.currentQ];
+                // Select question set based on path
+                const qSet = app.data.questions[app.data.path];
+                const q = qSet[app.data.currentQ];
+                
                 document.getElementById('q-category').innerText = `${app.data.currentQ + 1}/5 • ${q.cat}`;
                 document.getElementById('q-text').innerText = q.txt;
                 document.getElementById('progress-bar').style.width = `${(app.data.currentQ / 5) * 100}%`;
@@ -372,7 +399,9 @@
             handleAnswer: (val) => {
                 app.data.score += val;
                 app.data.currentQ++;
-                if (app.data.currentQ < app.data.questions.length) {
+                const qSet = app.data.questions[app.data.path];
+                
+                if (app.data.currentQ < qSet.length) {
                     app.renderQuestion();
                 } else {
                     app.finish();
@@ -385,45 +414,61 @@
                 setTimeout(() => app.showResults(), 2000);
             },
 
+            // --- RESULTS LOGIC (BRANCHED) ---
             showResults: () => {
                 app.goto('view-results');
                 
-                const isHighRisk = app.data.score > 15;
+                const score = app.data.score;
+                const path = app.data.path;
+                const isHighRisk = score > 15; // Threshold
+                
                 const title = document.getElementById('res-title');
                 const badge = document.getElementById('res-badge');
                 const desc = document.getElementById('res-desc');
                 const btn1 = document.getElementById('btn-cta-1');
                 const btn2 = document.getElementById('btn-cta-2');
+                const vidLabel = document.getElementById('video-label');
 
-                // --- PRIMARY CTA LINK ---
-                // "Take Action" goes to the specific URL requested
+                // Universal Button Actions
                 btn1.onclick = () => window.location.href = 'https://www.intercept.works/take-action';
-
-                // --- SECONDARY CTA ACTION ---
-                // "Talk with a Guide" opens the Monty Elsom modal
                 btn2.innerText = "TALK WITH A GUIDE";
                 btn2.onclick = () => app.openModal();
 
-                if (isHighRisk) {
-                    badge.innerText = "STATUS: HIGH CLARITY";
-                    title.innerHTML = "YOUR INSTINCTS<br><span class='highlight'>ARE STRONG.</span>";
-                    desc.innerText = "Your score indicates a significant breakdown in transparency. You deserve partnership, not secrecy. Support works best when it is structured.";
-                    btn1.innerText = "TAKE ACTION"; // Updated label to match the link intention
-                } else {
-                    badge.innerText = "STATUS: ELEVATED CONCERN";
-                    title.innerHTML = "YOU ARE NOT<br><span class='highlight'>IMAGINING THINGS.</span>";
-                    desc.innerText = "Your reflections suggest early indicators of disconnection. This is not a diagnosis, but your confusion is valid.";
-                    btn1.innerText = "EXPLORE INTERCEPT";
+                // === WIFE LOGIC ===
+                if (path === 'wife') {
+                    vidLabel.innerText = "MESSAGE FROM BRIT (3 MIN)";
+                    if (isHighRisk) {
+                        badge.innerText = "STATUS: HIGH CLARITY";
+                        title.innerHTML = "YOUR INSTINCTS<br><span class='highlight'>ARE STRONG.</span>";
+                        desc.innerText = "Your score indicates a significant breakdown in transparency. You deserve partnership, not secrecy. Support works best when it is structured.";
+                        btn1.innerText = "TAKE ACTION";
+                    } else {
+                        badge.innerText = "STATUS: ELEVATED CONCERN";
+                        title.innerHTML = "YOU ARE NOT<br><span class='highlight'>IMAGINING THINGS.</span>";
+                        desc.innerText = "Your reflections suggest early indicators of disconnection. This is not a diagnosis, but your confusion is valid.";
+                        btn1.innerText = "EXPLORE INTERCEPT";
+                    }
+                }
+
+                // === HUSBAND LOGIC ===
+                if (path === 'husband') {
+                    vidLabel.innerText = "MESSAGE FROM CRAIG (3 MIN)";
+                    if (isHighRisk) {
+                        badge.innerText = "STATUS: CRITICAL";
+                        title.innerHTML = "IT IS TIME TO<br><span class='highlight'>FIGHT BACK.</span>";
+                        desc.innerText = "You are caught in a cycle of secrecy and destructive behavior. You cannot win this battle alone. It is time to take ownership and get your life back.";
+                        btn1.innerText = "JOIN THE BROTHERHOOD";
+                    } else {
+                        badge.innerText = "STATUS: WARNING";
+                        title.innerHTML = "DON'T LET YOUR<br><span class='highlight'>GUARD DOWN.</span>";
+                        desc.innerText = "You may not be in crisis yet, but isolation is dangerous. Stay sharp. Intercept provides the tools to keep you free and dangerous for good.";
+                        btn1.innerText = "STRENGTHEN YOUR WALK";
+                    }
                 }
             },
 
-            // --- MODAL LOGIC ---
-            openModal: () => {
-                document.getElementById('guide-modal').classList.add('open');
-            },
-            closeModal: () => {
-                document.getElementById('guide-modal').classList.remove('open');
-            }
+            openModal: () => document.getElementById('guide-modal').classList.add('open'),
+            closeModal: () => document.getElementById('guide-modal').classList.remove('open')
         };
     </script>
 </body>
