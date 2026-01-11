@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intercept - Start Reflection</title>
+    <title>Intercept - Assessment</title>
     <style>
-        /* --- RESET & BASICS --- */
+        /* --- CSS STYLES --- */
+        :root {
+            --bg-color: #1a1f2b;       /* Dark Navy Background */
+            --text-color: #ffffff;
+            --accent-yellow: #fca311;  /* The Gold/Yellow text */
+            --btn-blue: #3b5998;       /* The Button Blue */
+            --header-bg: #ffffff;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,126 +22,124 @@
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #1a1f2b; /* Dark Navy Background */
-            color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.5;
         }
 
-        /* --- HEADER / NAV --- */
-        .navbar {
-            background-color: #ffffff;
+        /* 1. HEADER SECTION */
+        header {
+            background-color: var(--header-bg);
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 70px;
         }
 
-        .logo-container {
+        .logo {
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .logo-icon {
-            width: 40px; /* Adjust based on your actual logo size */
-            height: auto;
-        }
-
-        .logo-text {
-            font-size: 24px;
             font-weight: 800;
-            color: #333;
+            color: #1a1f2b;
+            font-size: 24px;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
+        
+        .logo svg {
+            height: 40px;
+            width: auto;
+        }
 
-        .hamburger {
-            font-size: 24px;
-            color: #333;
+        .menu-icon {
+            font-size: 28px;
+            color: #1a1f2b;
             cursor: pointer;
         }
 
-        /* --- HERO IMAGE --- */
-        .hero-section {
+        /* 2. HERO IMAGE SECTION */
+        .hero-container {
             width: 100%;
-            overflow: hidden;
-            /* This ensures the image sits tight against the header */
+            line-height: 0; /* Removes gap below image */
         }
 
-        .hero-section img {
+        .hero-container img {
             width: 100%;
             height: auto;
-            display: block; /* Removes tiny gap at bottom of images */
             object-fit: cover;
+            max-height: 400px; /* Optional: limits height on large screens */
+            display: block;
         }
 
-        /* --- MAIN CONTENT --- */
-        .content-container {
-            padding: 40px 25px;
-            max-width: 600px; /* Keeps text readable on desktop */
+        /* 3. CONTENT SECTION */
+        .content-wrapper {
+            padding: 40px 24px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
         h1 {
-            font-size: 32px;
+            font-size: 32px; /* Large heading size */
             line-height: 1.1;
             font-weight: 900;
-            color: #4a5568; /* Darker grey-blue for first part */
-            margin-bottom: 5px;
+            color: #586376; /* Muted blue-grey for first part */
+            margin-bottom: 8px;
         }
 
-        .highlight-text {
-            color: #fca311; /* The Yellow/Gold color */
+        .highlight {
+            color: var(--accent-yellow);
             display: block;
             margin-top: 5px;
-            margin-bottom: 20px;
         }
 
-        p.subtext {
+        p.description {
             color: #a0aec0;
-            font-size: 16px;
+            margin-top: 20px;
             margin-bottom: 30px;
+            font-size: 16px;
         }
 
-        /* --- ALERT BOX --- */
-        .alert-box {
+        /* 4. FORM & ALERTS */
+        .privacy-alert {
             background-color: #252b3b;
-            border-left: 4px solid #fca311; /* Yellow border on left */
+            border-left: 4px solid var(--accent-yellow);
             padding: 15px;
             border-radius: 4px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 13px;
             color: #cbd5e0;
             display: flex;
+            gap: 12px;
             align-items: flex-start;
-            gap: 10px;
         }
 
-        .lock-icon {
-            font-size: 14px;
-            margin-top: 2px;
-        }
-
-        /* --- BUTTON --- */
-        .btn-primary {
-            display: block;
-            width: 100%;
-            background-color: #3b5998; /* Muted Blue */
-            color: white;
-            padding: 18px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 700;
+        .privacy-alert .icon {
             font-size: 16px;
-            text-transform: uppercase;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s;
         }
 
-        .btn-primary:hover {
+        /* The Button Form */
+        .action-form {
+            width: 100%;
+        }
+
+        .btn-start {
+            width: 100%;
+            background-color: var(--btn-blue);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 50px; /* Fully rounded pill shape */
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: background-color 0.2s;
+        }
+
+        .btn-start:hover {
             background-color: #2d4373;
         }
 
@@ -141,36 +147,39 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo-container">
-            <img src="https://via.placeholder.com/40x40/000000/ffffff?text=Shield" alt="Shield Icon" class="logo-icon">
-            <span class="logo-text">INTERCEPT</span>
+    <header>
+        <div class="logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            INTERCEPT
         </div>
-        <div class="hamburger">
-            &#9776; </div>
-    </nav>
+        <div class="menu-icon">&#9776;</div>
+    </header>
 
-    <div class="hero-section">
-        <img src="your-image-filename.png" alt="Person struggling with addiction at laptop">
+    <div class="hero-container">
+        <img src="hero-image.png" alt="Man in dark room illuminated by screen">
     </div>
 
-    <main class="content-container">
+    <main class="content-wrapper">
         <h1>
             Internet pornography is killing marriages.
-            <span class="highlight-text">Tried to stop and can't? It's possible!</span>
+            <span class="highlight">Tried to stop and can't? It’s possible!</span>
         </h1>
-        
-        <p class="subtext">
+
+        <p class="description">
             A private tool to assess risk, find clarity, and take action.
         </p>
 
-        <div class="alert-box">
-            <span class="lock-icon">&#128274;</span> <div>
+        <div class="privacy-alert">
+            <span class="icon">&#128274;</span> <div>
                 <strong>Private & Discreet:</strong> No names required. Results are not stored unless you choose to share them at the end.
             </div>
         </div>
 
-        <button class="btn-primary">Start Reflection</button>
+        <form class="action-form" action="/start-reflection" method="POST">
+            <button type="submit" class="btn-start">Start Reflection</button>
+        </form>
     </main>
 
 </body>
