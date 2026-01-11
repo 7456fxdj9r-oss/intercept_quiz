@@ -133,6 +133,18 @@
             margin-left: auto; margin-right: auto;
         }
 
+        /* --- NEW HERO IMAGE STYLE --- */
+        .hero-image {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+        }
+
         h1 { 
             font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 700; 
             line-height: 1.1; margin-bottom: 12px; text-transform: uppercase; 
@@ -230,7 +242,7 @@
             <div class="contact-section">
                 <div class="contact-choice-title">Option 1: Contact Us Directly</div>
                 <a href="tel:9719989285" class="direct-link">📞 Call Monty: (971) 998-9285</a>
-                <a href="mailto:supportS@intercept.works" class="direct-link">✉️ Email: support@intercept.works</a>
+                <a href="mailto:support@intercept.works" class="direct-link">✉️ Email: support@intercept.works</a>
             </div>
 
             <div class="contact-section" style="border-bottom: none; padding-bottom: 0;">
@@ -274,6 +286,8 @@
     <main>
         
         <div id="view-welcome" class="view active center-v">
+            <img src="hero-image.png" alt="Welcome" class="hero-image">
+            
             <div class="badge">Confidential Check v1.0</div>
             <h1>RELATIONAL<br>INTEGRITY CHECK</h1>
             <p>A private tool to assess risk, find clarity, and take action.</p>
