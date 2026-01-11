@@ -148,7 +148,7 @@
             opacity: 0.6;
             cursor: not-allowed;
         }
-https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec
+
     </style>
 </head>
 <body>
@@ -190,10 +190,8 @@ https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6
     </main>
 
     <script>
-        // ************************************************************************
-        // PASTE YOUR GOOGLE APPS SCRIPT URL INSIDE THE QUOTES BELOW:
-        const scriptURL = 'PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE';
-        // ************************************************************************
+        // YOUR SCRIPT URL IS INSERTED BELOW:
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec';
 
         const form = document.forms['submit-to-google-sheet'];
         const btn = document.querySelector('.btn-start');
@@ -211,19 +209,13 @@ https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6
                     console.log('Success!', response);
                     
                     // 3. On Success, Go to Next Page
-                    // Change 'question1.html' to whatever your next page is actually named
-                    // For now, we show an alert to prove it worked.
-                    alert("Assessment Started. (This is where it redirects to the next page)");
+                    // REPLACE 'question1.html' WITH THE ACTUAL NAME OF YOUR NEXT FILE
+                    window.location.href = "question1.html"; 
                     
-                    // Uncomment the line below to actually redirect:
-                    // window.location.href = "question1.html"; 
-                    
-                    btn.disabled = false;
-                    btn.innerHTML = "Start Reflection";
                 })
                 .catch(error => {
                     console.error('Error!', error.message);
-                    alert("Error connecting. Please check your internet or Script URL.");
+                    alert("Error connecting. Please check your internet.");
                     btn.disabled = false;
                     btn.innerHTML = "Start Reflection";
                 });
