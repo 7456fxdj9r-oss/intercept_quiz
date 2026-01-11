@@ -190,32 +190,29 @@
     </main>
 
     <script>
-        // I HAVE INSERTED YOUR URL HERE:
         const scriptURL = 'https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec';
-
         const form = document.forms['submit-to-google-sheet'];
         const btn = document.querySelector('.btn-start');
 
         form.addEventListener('submit', e => {
             e.preventDefault();
             
-            // 1. Disable button to prevent double clicks
             btn.disabled = true;
             btn.innerHTML = "Processing...";
 
-            // 2. Send Data to Google Sheets
-            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            // ADDED { mode: 'no-cors' } TO FIX THE CORS ERROR
+            fetch(scriptURL, { method: 'POST', body: new FormData(form), mode: 'no-cors' })
                 .then(response => {
-                    console.log('Success!', response);
+                    // With 'no-cors', we can't see the response content, 
+                    // so we assume success if it reaches here.
+                    console.log('Request sent successfully');
                     
-                    // 3. On Success, Go to Next Page
-                    // REPLACE 'question1.html' WITH THE ACTUAL NAME OF YOUR NEXT FILE
+                    // Redirect to next page
                     window.location.href = "question1.html"; 
-                    
                 })
                 .catch(error => {
                     console.error('Error!', error.message);
-                    alert("Error connecting. Please check your internet.");
+                    alert("Error connecting. Please check your internet connection.");
                     btn.disabled = false;
                     btn.innerHTML = "Start Reflection";
                 });
