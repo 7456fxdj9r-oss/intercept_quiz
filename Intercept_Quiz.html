@@ -23,7 +23,7 @@
             --text-blue-grey: #64748b; 
             
             --accent-yellow: #FBBF24;
-            --status-green: #10b981; /* Green for "Good" Status */
+            --status-green: #10b981;
             
             --btn-blue: #2c4f7c;
             --border-color: #2e3646;
@@ -98,7 +98,6 @@
         .modal-overlay.open .modal-card { transform: translateY(0); }
 
         .contact-name { font-family: 'Oswald', sans-serif; font-size: 22px; color: white; margin-bottom: 5px; }
-        .contact-number { font-size: 18px; color: var(--accent-yellow); font-weight: 600; margin-bottom: 20px; display: block; text-decoration: none; }
         
         /* Form Inputs */
         .input-group { margin-bottom: 15px; text-align: left; }
@@ -246,6 +245,10 @@
             </p>
             
             <form onsubmit="app.submitContact(event)">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="contact-name" class="modal-input" placeholder="Your Name" required>
+                </div>
                 <div class="input-group">
                     <label>Phone Number</label>
                     <input type="tel" id="contact-phone" class="modal-input" placeholder="(555) 555-5555" required>
@@ -575,11 +578,11 @@
                 const formData = {
                     role: app.data.path,
                     score: app.data.score,
+                    name: document.getElementById('contact-name').value,
                     phone: document.getElementById('contact-phone').value,
                     email: document.getElementById('contact-email').value
                 };
 
-                // Using 'no-cors' mode to send data without waiting for strict JSON response (common for simple Sheets usage)
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
