@@ -136,3 +136,471 @@
         }
 
         p { color: var(--text-slate); line-height: 1.6; font-size: 15px; margin-bottom: 24px; }
+
+        .privacy-note {
+            font-size: 13px; color: var(--text-blue-grey);
+            background: var(--card-navy); padding: 12px;
+            border-radius: var(--radius); border-left: 3px solid var(--accent-yellow);
+        }
+
+        .btn {
+            width: 100%; padding: 18px;
+            border-radius: 50px;
+            font-size: 16px; font-weight: 600;
+            border: none; cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            margin-bottom: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-primary {
+            background-color: var(--btn-blue);
+            color: white;
+            box-shadow: 0 4px 15px rgba(44, 79, 124, 0.4);
+        }
+        
+        .btn-green {
+            background-color: var(--status-green);
+            color: #064e3b;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-ghost {
+            background: transparent; color: var(--text-slate);
+            border: 1px solid var(--border-color);
+        }
+
+        .option-card {
+            background: var(--card-navy);
+            border: 1px solid var(--border-color);
+            padding: 20px; border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: 0.2s;
+        }
+        .option-card span { font-size: 15px; color: var(--text-slate); }
+
+        .view {
+            position: absolute; top: 0; left: 0; width: 100%; min-height: 100%;
+            padding: 24px; display: flex; flex-direction: column;
+            opacity: 0; transform: translateY(20px); pointer-events: none;
+            transition: all 0.4s var(--ease); background: var(--bg-navy);
+        }
+        .view.active { opacity: 1; transform: translateY(0); pointer-events: auto; z-index: 10; }
+        .hidden { display: none !important; }
+        .center-v { justify-content: center; }
+
+        .badge {
+            display: inline-block; padding: 4px 8px; border-radius: 4px;
+            border: 1px solid var(--border-color); color: var(--text-slate);
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            margin-bottom: 16px; letter-spacing: 1px;
+        }
+
+        .video-box {
+            width: 100%; aspect-ratio: 16/9; background: #000;
+            border-radius: 8px; border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 24px; position: relative; overflow: hidden;
+            background-image: linear-gradient(135deg, #1B2230, #232d3f);
+        }
+        .play-btn {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: var(--accent-yellow);
+        }
+        
+        .progress-rail {
+            position: fixed; top: 70px; left: 0; width: 100%; height: 4px;
+            background: var(--bg-navy); z-index: 90;
+        }
+        .progress-fill {
+            height: 100%; background: var(--accent-yellow); width: 0%; transition: width 0.4s var(--ease);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-logo">
+            <div class="shield-icon"></div>
+            INTERCEPT
+        </div>
+        <a href="https://www.google.com" class="btn-exit">Quick Exit ✕</a>
+    </header>
+
+    <div id="guide-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="badge" style="border-color: var(--accent-yellow); color: var(--accent-yellow);">CONNECT WITH A GUIDE</div>
+            <h2 style="font-size: 20px; font-family: 'Oswald'; margin-bottom: 10px;">GET CONFIDENTIAL SUPPORT</h2>
+            <p style="font-size: 14px; margin-bottom: 20px;">
+                Leave your info. A trusted guide will reach out within 24 hours.
+            </p>
+            
+            <form onsubmit="app.submitContact(event)">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="contact-name" class="modal-input" placeholder="Your Name" required>
+                </div>
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="contact-phone" class="modal-input" placeholder="(555) 555-5555" required>
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="contact-email" class="modal-input" placeholder="you@example.com" required>
+                </div>
+                
+                <button type="submit" id="btn-submit" class="btn btn-primary">REQUEST CONTACT</button>
+            </form>
+            
+            <div id="contact-success" class="hidden">
+                <p style="color: var(--status-green); font-weight: bold; margin-top:15px;">Received. We will be in touch soon.</p>
+            </div>
+
+            <button class="btn btn-ghost" style="margin-top:10px;" onclick="app.closeModal()">CLOSE</button>
+        </div>
+    </div>
+
+    <div class="progress-rail hidden" id="progress-container">
+        <div class="progress-fill" id="progress-bar"></div>
+    </div>
+
+    <main>
+        
+        <div id="view-welcome" class="view active center-v">
+            <div class="badge">Confidential Check v1.0</div>
+            <h1>RELATIONAL<br>INTEGRITY CHECK</h1>
+            <p>A private tool to assess risk, find clarity, and take action.</p>
+            <div style="background:var(--card-navy); padding:12px; border-radius:8px; border-left:3px solid var(--accent-yellow); margin-bottom:24px;">
+                <p style="margin:0; font-size:13px; color:var(--text-blue-grey);"><strong>🔒 Private & Discreet:</strong> No data is stored until you choose to share it.</p>
+            </div>
+            <br>
+            <button class="btn btn-primary" onclick="app.goto('view-identity')">START REFLECTION</button>
+        </div>
+
+        <div id="view-identity" class="view center-v">
+            <h2>Who are you?</h2>
+            
+            <div class="option-card" onclick="app.startCheck('wife')">
+                <span>Wife / Partner</span><span style="color:var(--accent-yellow);">→</span>
+            </div>
+            
+            <div class="option-card" onclick="app.startCheck('husband')">
+                <span>Husband / Man</span><span style="color:var(--text-blue-grey);">→</span>
+            </div>
+            
+            <button class="btn btn-ghost" onclick="app.goto('view-welcome')">Go Back</button>
+        </div>
+
+        <div id="view-questions" class="view">
+            <div id="q-category" class="badge" style="color:var(--accent-yellow); border-color:var(--accent-yellow);">CATEGORY</div>
+            <h1 id="q-text" style="font-size: 24px; text-transform: none;">Question text...</h1>
+            <div id="q-options" style="margin-top: 30px;"></div>
+        </div>
+
+        <div id="view-loading" class="view center-v" style="text-align: center;">
+            <div style="width: 50px; height: 50px; border: 4px solid var(--card-navy); border-top: 4px solid var(--accent-yellow); border-radius: 50%; animation: spin 1s infinite linear; margin: 0 auto 30px auto;"></div>
+            <h2 style="font-family: 'Oswald'; font-size: 24px; text-transform: uppercase;">Processing...</h2>
+            <p>Analyzing responses against healthy benchmarks.</p>
+        </div>
+
+        <div id="view-results" class="view">
+            <div id="res-badge" class="badge" style="background:var(--accent-yellow); color:black; border:none;">STATUS</div>
+            
+            <h1 id="res-title">TITLE HERE</h1>
+            
+            <div class="video-box">
+                <div class="play-btn">▶</div>
+                <div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>
+            </div>
+
+            <div id="res-container" style="background:var(--card-navy); padding:20px; border-radius:8px; border-left:4px solid var(--accent-yellow); margin-bottom:24px;">
+                <p id="res-desc" style="margin:0; color:var(--text-white);">Description...</p>
+            </div>
+
+            <button id="btn-cta-1" class="btn btn-primary">PRIMARY ACTION</button>
+            <button id="btn-cta-2" class="btn btn-ghost">SECONDARY ACTION</button>
+            
+            <div style="text-align:center; margin-top:20px;">
+                <a href="#" onclick="location.reload()" style="color:var(--text-blue-grey); font-size:12px; text-decoration:none;">RESTART CHECK</a>
+            </div>
+        </div>
+
+    </main>
+
+    <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
+
+    <script>
+        // --- YOUR CONNECTED SHEET URL ---
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec";
+
+        const app = {
+            data: {
+                currentQ: 0,
+                score: 0,
+                path: 'wife', 
+                
+                // --- QUESTION BANK ---
+                questions: {
+                    // WIFE QUESTIONS
+                    wife: [
+                        { cat: "Digital Habits", txt: "When it comes to his devices, how would you describe the atmosphere?", opts: [
+                            { v:1, t:"Totally open / Shared freely" }, { v:2, t:"Mostly open" }, 
+                            { v:3, t:"Neutral / I don't really know" }, { v:4, t:"Guarded / Screens turned away" }, 
+                            { v:5, t:"Secretive / Locked / Tense" }
+                        ]},
+                        { cat: "Clarity", txt: "How clear is his schedule regarding time away from home?", opts: [
+                            { v:1, t:"Completely clear" }, { v:2, t:"Mostly clear" }, 
+                            { v:3, t:"Vague details" }, { v:4, t:"Inconsistent stories" }, 
+                            { v:5, t:"Unaccounted blocks of time" }
+                        ]},
+                        { cat: "Reactions", txt: "If you walk into a room unexpectedly while he is on a device, what is the reaction?", opts: [
+                            { v:1, t:"Welcoming / No reaction" }, { v:2, t:"Mild distraction" }, 
+                            { v:3, t:"Startled" }, { v:4, t:"Visibly tense" }, 
+                            { v:5, t:"Defensive (snapping/hiding)" }
+                        ]},
+                        { cat: "Finances", txt: "How transparent is the financial situation?", opts: [
+                            { v:1, t:"Fully transparent" }, { v:2, t:"Mostly open" }, 
+                            { v:3, t:"Unsure / He manages it" }, { v:4, t:"Confusing gaps" }, 
+                            { v:5, t:"Hidden spending / Opaque" }
+                        ]},
+                        { cat: "Intuition", txt: "Reflecting on your own 'gut feeling' right now:", opts: [
+                            { v:1, t:"I feel safe" }, { v:2, t:"I feel mostly okay" }, 
+                            { v:3, t:"I feel confused" }, { v:4, t:"I feel anxious often" }, 
+                            { v:5, t:"Strong sense something is wrong" }
+                        ]}
+                    ],
+
+                    // HUSBAND QUESTIONS
+                    husband: [
+                        { cat: "Secrecy", txt: "Do you delete your browser history, use incognito mode, or hide apps to conceal activity?", opts: [
+                            { v:1, t:"Never / I live openly" }, { v:2, t:"Rarely" }, 
+                            { v:3, t:"Sometimes" }, { v:4, t:"Often" }, 
+                            { v:5, t:"Daily / Constantly" }
+                        ]},
+                        { cat: "Control", txt: "When you feel the urge to view pornography or act out, do you feel like you can stop?", opts: [
+                            { v:1, t:"Yes, I have full control" }, { v:2, t:"Mostly, but it's a struggle" }, 
+                            { v:3, t:"It's 50/50" }, { v:4, t:"I often feel powerless" }, 
+                            { v:5, t:"No, I feel trapped" }
+                        ]},
+                        { cat: "Impact", txt: "How is destructive behavior affecting your marriage or relationships?", opts: [
+                            { v:1, t:"It isn't / No impact" }, { v:2, t:"Minimal impact" }, 
+                            { v:3, t:"Causing some distance" }, { v:4, t:"Causing major conflict" }, 
+                            { v:5, t:"Destroying trust / Separated" }
+                        ]},
+                        { cat: "Escapism", txt: "Do you turn to screens or sexual acting out to cope with stress, anger, or loneliness?", opts: [
+                            { v:1, t:"Never" }, { v:2, t:"Rarely" }, 
+                            { v:3, t:"Sometimes" }, { v:4, t:"Frequently" }, 
+                            { v:5, t:"It is my primary coping mechanism" }
+                        ]},
+                        { cat: "Ownership", txt: "Are you hiding the extent of your struggle from your wife or others?", opts: [
+                            { v:1, t:"No, I am fully transparent" }, { v:2, t:"Mostly open, kept some details back" }, 
+                            { v:3, t:"I share only when asked" }, { v:4, t:"I hide most of it" }, 
+                            { v:5, t:"I am living a double life" }
+                        ]}
+                    ]
+                }
+            },
+
+            // --- NAVIGATION ---
+            goto: (viewId) => {
+                document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+                document.getElementById(viewId).classList.add('active');
+                const prog = document.getElementById('progress-container');
+                viewId === 'view-questions' ? prog.classList.remove('hidden') : prog.classList.add('hidden');
+            },
+
+            // --- START LOGIC ---
+            startCheck: (type) => {
+                app.data.path = type; 
+                app.data.currentQ = 0; 
+                app.data.score = 0;
+                app.renderQuestion(); 
+                app.goto('view-questions');
+            },
+
+            renderQuestion: () => {
+                const qSet = app.data.questions[app.data.path];
+                const q = qSet[app.data.currentQ];
+                
+                document.getElementById('q-category').innerText = `${app.data.currentQ + 1}/5 • ${q.cat}`;
+                document.getElementById('q-text').innerText = q.txt;
+                document.getElementById('progress-bar').style.width = `${(app.data.currentQ / 5) * 100}%`;
+
+                const container = document.getElementById('q-options');
+                container.innerHTML = '';
+                q.opts.forEach(opt => {
+                    const btn = document.createElement('div');
+                    btn.className = 'option-card';
+                    btn.innerHTML = `<span>${opt.t}</span>`;
+                    btn.onclick = () => app.handleAnswer(opt.v);
+                    container.appendChild(btn);
+                });
+            },
+
+            handleAnswer: (val) => {
+                app.data.score += val;
+                app.data.currentQ++;
+                const qSet = app.data.questions[app.data.path];
+                
+                if (app.data.currentQ < qSet.length) {
+                    app.renderQuestion();
+                } else {
+                    app.finish();
+                }
+            },
+
+            finish: () => {
+                document.getElementById('progress-bar').style.width = '100%';
+                app.goto('view-loading');
+                setTimeout(() => app.showResults(), 2000);
+            },
+
+            // --- RESULTS LOGIC (With Green Status) ---
+            showResults: () => {
+                app.goto('view-results');
+                
+                const score = app.data.score; 
+                const path = app.data.path;
+                
+                // Risk Logic
+                const isHighRisk = score >= 16;
+                const isMediumRisk = score >= 9 && score < 16;
+                const isLowRisk = score <= 8; 
+
+                const title = document.getElementById('res-title');
+                const badge = document.getElementById('res-badge');
+                const desc = document.getElementById('res-desc');
+                const resContainer = document.getElementById('res-container');
+                const btn1 = document.getElementById('btn-cta-1');
+                const btn2 = document.getElementById('btn-cta-2');
+                const vidLabel = document.getElementById('video-label');
+
+                // Default Button Setup
+                btn1.onclick = () => window.location.href = 'https://www.intercept.works/take-action';
+                btn2.innerText = "TALK WITH A GUIDE";
+                btn2.onclick = () => app.openModal();
+                btn2.className = "btn btn-ghost";
+
+                // === WIFE LOGIC ===
+                if (path === 'wife') {
+                    vidLabel.innerText = "MESSAGE FROM BRIT (3 MIN)";
+                    
+                    if (isLowRisk) {
+                        badge.innerText = "STATUS: HEALTHY CLARITY";
+                        badge.style.background = "var(--status-green)";
+                        badge.style.color = "#064e3b";
+                        title.innerHTML = "YOU ARE <span class='highlight-green'>SECURE.</span>";
+                        desc.innerText = "Your reflection suggests a relationship built on transparency. Sadly, many wives around you are suffering in silence. Learn about Intercept so you can be a safe resource for friends who need answers.";
+                        resContainer.style.borderLeftColor = "var(--status-green)";
+                        btn1.innerText = "LEARN TO HELP OTHERS";
+                        btn1.className = "btn btn-green";
+                    
+                    } else if (isHighRisk) {
+                        badge.innerText = "STATUS: HIGH CLARITY";
+                        badge.style.background = "var(--accent-yellow)";
+                        badge.style.color = "black";
+                        title.innerHTML = "YOUR INSTINCTS<br><span class='highlight'>ARE STRONG.</span>";
+                        desc.innerText = "Your score indicates a significant breakdown in transparency. You deserve partnership, not secrecy. Support works best when it is structured.";
+                        resContainer.style.borderLeftColor = "var(--accent-yellow)";
+                        btn1.innerText = "TAKE ACTION";
+                        btn1.className = "btn btn-primary";
+
+                    } else {
+                        badge.innerText = "STATUS: ELEVATED CONCERN";
+                        badge.style.background = "var(--accent-yellow)";
+                        badge.style.color = "black";
+                        title.innerHTML = "YOU ARE NOT<br><span class='highlight'>IMAGINING THINGS.</span>";
+                        desc.innerText = "Your reflections suggest early indicators of disconnection. This is not a diagnosis, but your confusion is valid.";
+                        resContainer.style.borderLeftColor = "var(--accent-yellow)";
+                        btn1.innerText = "EXPLORE INTERCEPT";
+                        btn1.className = "btn btn-primary";
+                    }
+                }
+
+                // === HUSBAND LOGIC ===
+                if (path === 'husband') {
+                    vidLabel.innerText = "MESSAGE FROM CRAIG (3 MIN)";
+                    
+                    if (isLowRisk) {
+                        badge.innerText = "STATUS: STANDING FIRM";
+                        badge.style.background = "var(--status-green)";
+                        badge.style.color = "#064e3b"; 
+                        title.innerHTML = "YOU ARE IN <span class='highlight-green'>THE FIGHT.</span>";
+                        desc.innerText = "Your results indicate you are walking in freedom. But you know the reality: internet pornography is killing men and marriages around you. Your friends are most likely struggling. Learn how Intercept works so you can point them to the brotherhood.";
+                        resContainer.style.borderLeftColor = "var(--status-green)";
+                        btn1.innerText = "LEARN TO HELP OTHERS";
+                        btn1.className = "btn btn-green";
+                        
+                    } else if (isHighRisk) {
+                        badge.innerText = "STATUS: CRITICAL";
+                        badge.style.background = "var(--accent-yellow)";
+                        badge.style.color = "black";
+                        title.innerHTML = "IT IS TIME TO<br><span class='highlight'>FIGHT BACK.</span>";
+                        desc.innerText = "You are caught in a cycle of secrecy and destructive behavior. You cannot win this battle alone. It is time to take ownership and get your life back.";
+                        resContainer.style.borderLeftColor = "var(--accent-yellow)";
+                        btn1.innerText = "JOIN THE BROTHERHOOD";
+                        btn1.className = "btn btn-primary";
+
+                    } else {
+                        badge.innerText = "STATUS: WARNING";
+                        badge.style.background = "var(--accent-yellow)";
+                        badge.style.color = "black";
+                        title.innerHTML = "DON'T LET YOUR<br><span class='highlight'>GUARD DOWN.</span>";
+                        desc.innerText = "You may not be in crisis yet, but isolation is dangerous. Stay sharp. Intercept provides the tools to end destructive behavior for good.";
+                        resContainer.style.borderLeftColor = "var(--accent-yellow)";
+                        btn1.innerText = "STRENGTHEN YOUR WALK";
+                        btn1.className = "btn btn-primary";
+                    }
+                }
+            },
+
+            // --- MODAL & FORM LOGIC ---
+            openModal: () => document.getElementById('guide-modal').classList.add('open'),
+            closeModal: () => document.getElementById('guide-modal').classList.remove('open'),
+
+            submitContact: (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit');
+                const successMsg = document.getElementById('contact-success');
+                
+                btn.innerText = "SENDING...";
+                btn.disabled = true;
+
+                const formData = {
+                    role: app.data.path,
+                    score: app.data.score,
+                    name: document.getElementById('contact-name').value,
+                    phone: document.getElementById('contact-phone').value,
+                    email: document.getElementById('contact-email').value
+                };
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                .then(() => {
+                    successMsg.classList.remove('hidden');
+                    btn.innerText = "SENT";
+                })
+                .catch(err => {
+                    alert("Unable to send. Please check your connection.");
+                    btn.disabled = false;
+                    btn.innerText = "TRY AGAIN";
+                });
+            }
+        };
+    </script>
+</body>
+</html>
