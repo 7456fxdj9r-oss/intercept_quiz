@@ -23,6 +23,8 @@
             --text-blue-grey: #64748b; 
             
             --accent-yellow: #FBBF24;
+            --status-green: #10b981;
+            
             --btn-blue: #2c4f7c;
             --border-color: #2e3646;
 
@@ -96,8 +98,18 @@
         .modal-overlay.open .modal-card { transform: translateY(0); }
 
         .contact-name { font-family: 'Oswald', sans-serif; font-size: 22px; color: white; margin-bottom: 5px; }
-        .contact-number { font-size: 18px; color: var(--accent-yellow); font-weight: 600; margin-bottom: 20px; display: block; text-decoration: none; }
         
+        /* Form Inputs */
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-slate); margin-bottom: 5px; text-transform: uppercase; font-weight: 700; }
+        .modal-input {
+            width: 100%; padding: 12px; background: #1B2230;
+            border: 1px solid var(--border-color); color: white;
+            border-radius: 6px; font-size: 16px; font-family: 'Inter', sans-serif;
+            -webkit-appearance: none;
+        }
+        .modal-input:focus { border-color: var(--accent-yellow); }
+
         /* --- MAIN VIEWPORT --- */
         main {
             flex: 1; margin-top: 70px;
@@ -114,6 +126,7 @@
         }
 
         h1 .highlight { color: var(--accent-yellow); }
+        h1 .highlight-green { color: var(--status-green); }
 
         h2 { 
             font-family: 'Inter', sans-serif;
@@ -146,6 +159,17 @@
             box-shadow: 0 4px 15px rgba(44, 79, 124, 0.4);
         }
         
+        .btn-green {
+            background-color: var(--status-green);
+            color: #064e3b;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-ghost {
             background: transparent; color: var(--text-slate);
             border: 1px solid var(--border-color);
@@ -214,12 +238,34 @@
 
     <div id="guide-modal" class="modal-overlay">
         <div class="modal-card">
-            <div class="badge" style="border-color: var(--accent-yellow); color: var(--accent-yellow);">TRUSTED GUIDE</div>
-            <div class="contact-name">MONTY ELSOM</div>
-            <a href="tel:9719989285" class="contact-number">(971) 998-9285</a>
-            <p style="font-size: 14px; margin-bottom: 24px;">Available for a confidential conversation about your next steps.</p>
-            <a href="tel:9719989285" class="btn btn-primary">CALL NOW</a>
-            <button class="btn btn-ghost" onclick="app.closeModal()">CLOSE</button>
+            <div class="badge" style="border-color: var(--accent-yellow); color: var(--accent-yellow);">CONNECT WITH A GUIDE</div>
+            <h2 style="font-size: 20px; font-family: 'Oswald'; margin-bottom: 10px;">GET CONFIDENTIAL SUPPORT</h2>
+            <p style="font-size: 14px; margin-bottom: 20px;">
+                Leave your info. A trusted guide will reach out within 24 hours.
+            </p>
+            
+            <form onsubmit="app.submitContact(event)">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="contact-name" class="modal-input" placeholder="Your Name" required>
+                </div>
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="contact-phone" class="modal-input" placeholder="(555) 555-5555" required>
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="contact-email" class="modal-input" placeholder="you@example.com" required>
+                </div>
+                
+                <button type="submit" id="btn-submit" class="btn btn-primary">REQUEST CONTACT</button>
+            </form>
+            
+            <div id="contact-success" class="hidden">
+                <p style="color: var(--status-green); font-weight: bold; margin-top:15px;">Received. We will be in touch soon.</p>
+            </div>
+
+            <button class="btn btn-ghost" style="margin-top:10px;" onclick="app.closeModal()">CLOSE</button>
         </div>
     </div>
 
@@ -233,7 +279,9 @@
             <div class="badge">Confidential Check v1.0</div>
             <h1>RELATIONAL<br>INTEGRITY CHECK</h1>
             <p>A private tool to assess risk, find clarity, and take action.</p>
-            <div class="privacy-note"><strong>🔒 Private & Discreet:</strong> No names required. No data stored.</div>
+            <div style="background:var(--card-navy); padding:12px; border-radius:8px; border-left:3px solid var(--accent-yellow); margin-bottom:24px;">
+                <p style="margin:0; font-size:13px; color:var(--text-blue-grey);"><strong>🔒 Private & Discreet:</strong> No data is stored until you choose to share it.</p>
+            </div>
             <br>
             <button class="btn btn-primary" onclick="app.goto('view-identity')">START REFLECTION</button>
         </div>
@@ -274,7 +322,7 @@
                 <div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>
             </div>
 
-            <div style="background:var(--card-navy); padding:20px; border-radius:8px; border-left:4px solid var(--accent-yellow); margin-bottom:24px;">
+            <div id="res-container" style="background:var(--card-navy); padding:20px; border-radius:8px; border-left:4px solid var(--accent-yellow); margin-bottom:24px;">
                 <p id="res-desc" style="margin:0; color:var(--text-white);">Description...</p>
             </div>
 
@@ -291,11 +339,14 @@
     <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
 
     <script>
+        // --- YOUR CONNECTED SHEET URL ---
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec";
+
         const app = {
             data: {
                 currentQ: 0,
                 score: 0,
-                path: 'wife', // 'wife' or 'husband'
+                path: 'wife', 
                 
                 // --- QUESTION BANK ---
                 questions: {
@@ -328,7 +379,7 @@
                         ]}
                     ],
 
-                    // HUSBAND QUESTIONS (New)
+                    // HUSBAND QUESTIONS
                     husband: [
                         { cat: "Secrecy", txt: "Do you delete your browser history, use incognito mode, or hide apps to conceal activity?", opts: [
                             { v:1, t:"Never / I live openly" }, { v:2, t:"Rarely" }, 
@@ -340,7 +391,7 @@
                             { v:3, t:"It's 50/50" }, { v:4, t:"I often feel powerless" }, 
                             { v:5, t:"No, I feel trapped" }
                         ]},
-                        { cat: "Impact", txt: "How is this behavior affecting your marriage or relationships?", opts: [
+                        { cat: "Impact", txt: "How is destructive behavior affecting your marriage or relationships?", opts: [
                             { v:1, t:"It isn't / No impact" }, { v:2, t:"Minimal impact" }, 
                             { v:3, t:"Causing some distance" }, { v:4, t:"Causing major conflict" }, 
                             { v:5, t:"Destroying trust / Separated" }
@@ -369,7 +420,7 @@
 
             // --- START LOGIC ---
             startCheck: (type) => {
-                app.data.path = type; // Set path (wife or husband)
+                app.data.path = type; 
                 app.data.currentQ = 0; 
                 app.data.score = 0;
                 app.renderQuestion(); 
@@ -377,7 +428,6 @@
             },
 
             renderQuestion: () => {
-                // Select question set based on path
                 const qSet = app.data.questions[app.data.path];
                 const q = qSet[app.data.currentQ];
                 
@@ -414,61 +464,141 @@
                 setTimeout(() => app.showResults(), 2000);
             },
 
-            // --- RESULTS LOGIC (BRANCHED) ---
+            // --- RESULTS LOGIC (With Green Status) ---
             showResults: () => {
                 app.goto('view-results');
                 
-                const score = app.data.score;
+                const score = app.data.score; 
                 const path = app.data.path;
-                const isHighRisk = score > 15; // Threshold
                 
+                // Risk Logic
+                const isHighRisk = score >= 16;
+                const isMediumRisk = score >= 9 && score < 16;
+                const isLowRisk = score <= 8; 
+
                 const title = document.getElementById('res-title');
                 const badge = document.getElementById('res-badge');
                 const desc = document.getElementById('res-desc');
+                const resContainer = document.getElementById('res-container');
                 const btn1 = document.getElementById('btn-cta-1');
                 const btn2 = document.getElementById('btn-cta-2');
                 const vidLabel = document.getElementById('video-label');
 
-                // Universal Button Actions
+                // Default Button Setup
                 btn1.onclick = () => window.location.href = 'https://www.intercept.works/take-action';
                 btn2.innerText = "TALK WITH A GUIDE";
                 btn2.onclick = () => app.openModal();
+                btn2.className = "btn btn-ghost";
 
                 // === WIFE LOGIC ===
                 if (path === 'wife') {
                     vidLabel.innerText = "MESSAGE FROM BRIT (3 MIN)";
-                    if (isHighRisk) {
+                    
+                    if (isLowRisk) {
+                        badge.innerText = "STATUS: HEALTHY CLARITY";
+                        badge.style.background = "var(--status-green)";
+                        badge.style.color = "#064e3b";
+                        title.innerHTML = "YOU ARE <span class='highlight-green'>SECURE.</span>";
+                        desc.innerText = "Your reflection suggests a relationship built on transparency. Sadly, many wives around you are suffering in silence. Learn about Intercept so you can be a safe resource for friends who need answers.";
+                        resContainer.style.borderLeftColor = "var(--status-green)";
+                        btn1.innerText = "LEARN TO HELP OTHERS";
+                        btn1.className = "btn btn-green";
+                    
+                    } else if (isHighRisk) {
                         badge.innerText = "STATUS: HIGH CLARITY";
+                        badge.style.background = "var(--accent-yellow)";
+                        badge.style.color = "black";
                         title.innerHTML = "YOUR INSTINCTS<br><span class='highlight'>ARE STRONG.</span>";
                         desc.innerText = "Your score indicates a significant breakdown in transparency. You deserve partnership, not secrecy. Support works best when it is structured.";
+                        resContainer.style.borderLeftColor = "var(--accent-yellow)";
                         btn1.innerText = "TAKE ACTION";
+                        btn1.className = "btn btn-primary";
+
                     } else {
                         badge.innerText = "STATUS: ELEVATED CONCERN";
+                        badge.style.background = "var(--accent-yellow)";
+                        badge.style.color = "black";
                         title.innerHTML = "YOU ARE NOT<br><span class='highlight'>IMAGINING THINGS.</span>";
                         desc.innerText = "Your reflections suggest early indicators of disconnection. This is not a diagnosis, but your confusion is valid.";
+                        resContainer.style.borderLeftColor = "var(--accent-yellow)";
                         btn1.innerText = "EXPLORE INTERCEPT";
+                        btn1.className = "btn btn-primary";
                     }
                 }
 
                 // === HUSBAND LOGIC ===
                 if (path === 'husband') {
                     vidLabel.innerText = "MESSAGE FROM CRAIG (3 MIN)";
-                    if (isHighRisk) {
+                    
+                    if (isLowRisk) {
+                        badge.innerText = "STATUS: STANDING FIRM";
+                        badge.style.background = "var(--status-green)";
+                        badge.style.color = "#064e3b"; 
+                        title.innerHTML = "YOU ARE IN <span class='highlight-green'>THE FIGHT.</span>";
+                        desc.innerText = "Your results indicate you are walking in freedom. But you know the reality: internet pornography is killing men and marriages around you. Your friends are most likely struggling. Learn how Intercept works so you can point them to the brotherhood.";
+                        resContainer.style.borderLeftColor = "var(--status-green)";
+                        btn1.innerText = "LEARN TO HELP OTHERS";
+                        btn1.className = "btn btn-green";
+                        
+                    } else if (isHighRisk) {
                         badge.innerText = "STATUS: CRITICAL";
+                        badge.style.background = "var(--accent-yellow)";
+                        badge.style.color = "black";
                         title.innerHTML = "IT IS TIME TO<br><span class='highlight'>FIGHT BACK.</span>";
                         desc.innerText = "You are caught in a cycle of secrecy and destructive behavior. You cannot win this battle alone. It is time to take ownership and get your life back.";
+                        resContainer.style.borderLeftColor = "var(--accent-yellow)";
                         btn1.innerText = "JOIN THE BROTHERHOOD";
+                        btn1.className = "btn btn-primary";
+
                     } else {
                         badge.innerText = "STATUS: WARNING";
+                        badge.style.background = "var(--accent-yellow)";
+                        badge.style.color = "black";
                         title.innerHTML = "DON'T LET YOUR<br><span class='highlight'>GUARD DOWN.</span>";
-                        desc.innerText = "You may not be in crisis yet, but isolation is dangerous. Stay sharp. Intercept provides the tools to keep you free and dangerous for good.";
+                        desc.innerText = "You may not be in crisis yet, but isolation is dangerous. Stay sharp. Intercept provides the tools to end destructive behavior for good.";
+                        resContainer.style.borderLeftColor = "var(--accent-yellow)";
                         btn1.innerText = "STRENGTHEN YOUR WALK";
+                        btn1.className = "btn btn-primary";
                     }
                 }
             },
 
+            // --- MODAL & FORM LOGIC ---
             openModal: () => document.getElementById('guide-modal').classList.add('open'),
-            closeModal: () => document.getElementById('guide-modal').classList.remove('open')
+            closeModal: () => document.getElementById('guide-modal').classList.remove('open'),
+
+            submitContact: (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btn-submit');
+                const successMsg = document.getElementById('contact-success');
+                
+                btn.innerText = "SENDING...";
+                btn.disabled = true;
+
+                const formData = {
+                    role: app.data.path,
+                    score: app.data.score,
+                    name: document.getElementById('contact-name').value,
+                    phone: document.getElementById('contact-phone').value,
+                    email: document.getElementById('contact-email').value
+                };
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                .then(() => {
+                    successMsg.classList.remove('hidden');
+                    btn.innerText = "SENT";
+                })
+                .catch(err => {
+                    alert("Unable to send. Please check your connection.");
+                    btn.disabled = false;
+                    btn.innerText = "TRY AGAIN";
+                });
+            }
         };
     </script>
 </body>
