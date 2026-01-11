@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intercept</title>
+    <title>Intercept - Assessment</title>
     <style>
-        /* --- RESET & BASIC SETUP --- */
+        /* --- CSS STYLES --- */
+        :root {
+            --bg-color: #1a1f2b;       /* Dark Navy Background */
+            --text-color: #ffffff;
+            --accent-yellow: #fca311;  /* The Gold/Yellow text */
+            --btn-blue: #3b5998;       /* The Button Blue */
+            --header-bg: #ffffff;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,14 +22,14 @@
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #1a1f2b; /* Dark Navy Background */
-            color: #ffffff;
-            line-height: 1.4;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
         }
 
-        /* --- 1. HEADER SECTION --- */
+        /* 1. HEADER SECTION */
         header {
-            background-color: #ffffff;
+            background-color: var(--header-bg);
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
@@ -29,49 +37,45 @@
             height: 70px;
         }
 
-        .logo-group {
+        .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        /* SVG Shield Icon */
-        .shield-icon {
-            width: 36px;
-            height: auto;
-            fill: #1a1f2b;
-        }
-
-        .logo-text {
-            font-size: 26px;
-            font-weight: 900;
+            gap: 10px;
+            font-weight: 800;
             color: #1a1f2b;
+            font-size: 24px;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
+        
+        .logo svg {
+            height: 40px;
+            width: auto;
+        }
 
-        .hamburger-menu {
+        .menu-icon {
             font-size: 28px;
             color: #1a1f2b;
             cursor: pointer;
         }
 
-        /* --- 2. IMAGE SECTION --- */
-        .image-container {
+        /* 2. HERO IMAGE SECTION */
+        .hero-container {
             width: 100%;
-            line-height: 0; /* Prevents gap below image */
+            line-height: 0; /* Removes gap below image */
             background-color: #000;
         }
 
-        .image-container img {
+        .hero-container img {
             width: 100%;
             height: auto;
-            display: block;
+            max-height: 500px;
             object-fit: cover;
+            display: block; /* Ensures no gap at bottom */
         }
 
-        /* --- 3. TEXT & FORM SECTION --- */
-        .content-area {
+        /* 3. CONTENT SECTION */
+        .content-wrapper {
             padding: 40px 24px;
             max-width: 600px;
             margin: 0 auto;
@@ -81,46 +85,49 @@
             font-size: 32px;
             line-height: 1.1;
             font-weight: 900;
-            color: #586376; /* Grey-Blue */
+            color: #586376; /* Muted blue-grey */
             margin-bottom: 8px;
         }
 
-        .highlight-gold {
-            color: #fca311; /* Gold/Yellow */
+        .highlight {
+            color: var(--accent-yellow);
             display: block;
             margin-top: 5px;
         }
 
-        p.sub-text {
-            color: #a0aec0; /* Light Grey */
+        p.description {
+            color: #a0aec0;
             margin-top: 20px;
             margin-bottom: 30px;
             font-size: 16px;
         }
 
-        /* Privacy Alert Box */
-        .privacy-box {
+        /* 4. FORM & ALERTS */
+        .privacy-alert {
             background-color: #252b3b;
-            border-left: 4px solid #fca311;
+            border-left: 4px solid var(--accent-yellow);
             padding: 15px;
             border-radius: 4px;
             margin-bottom: 25px;
             font-size: 13px;
             color: #cbd5e0;
             display: flex;
+            gap: 12px;
             align-items: flex-start;
-            gap: 10px;
         }
 
-        .lock-icon {
-            font-size: 14px;
-            margin-top: 1px;
+        .privacy-alert .icon {
+            font-size: 16px;
         }
 
-        /* Form Button */
-        .start-btn {
+        /* The Button Form */
+        .action-form {
             width: 100%;
-            background-color: #3b5998; /* Blue */
+        }
+
+        .btn-start {
+            width: 100%;
+            background-color: var(--btn-blue);
             color: white;
             border: none;
             padding: 18px;
@@ -130,51 +137,97 @@
             text-transform: uppercase;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: background 0.2s;
+            transition: background-color 0.2s;
         }
 
-        .start-btn:hover {
+        .btn-start:hover {
             background-color: #2d4373;
         }
+
+        /* Loading Spinner (Hidden by default) */
+        #loading {
+            display: none;
+            text-align: center;
+            color: var(--accent-yellow);
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-group">
-            <svg class="shield-icon" viewBox="0 0 24 24">
-                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+        <div class="logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
-            <span class="logo-text">INTERCEPT</span>
+            INTERCEPT
         </div>
-        <div class="hamburger-menu">&#9776;</div>
+        <div class="menu-icon">&#9776;</div>
     </header>
 
-    <div class="image-container">
-        <img src="man-chains.jpg" alt="Man in dark room">
+    <div class="hero-container">
+        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop" alt="Man in dark room illuminated by screen">
     </div>
 
-    <div class="content-area">
+    <main class="content-wrapper">
         <h1>
             Internet pornography is killing marriages.
-            <span class="highlight-gold">Tried to stop and can't? It’s possible!</span>
+            <span class="highlight">Tried to stop and can't? It’s possible!</span>
         </h1>
 
-        <p class="sub-text">
+        <p class="description">
             A private tool to assess risk, find clarity, and take action.
         </p>
 
-        <div class="privacy-box">
-            <span class="lock-icon">&#128274;</span>
+        <div class="privacy-alert">
+            <span class="icon">&#128274;</span>
             <div>
                 <strong>Private & Discreet:</strong> No names required. Results are not stored unless you choose to share them at the end.
             </div>
         </div>
 
-        <form action="#" method="GET">
-            <button type="submit" class="start-btn">START REFLECTION</button>
+        <form class="action-form" name="submit-to-google-sheet">
+            <button type="submit" class="btn-start">Start Reflection</button>
         </form>
-    </div>
+        <div id="loading">Loading assessment...</div>
+    </main>
+
+    <script>
+        // --- PASTE YOUR GOOGLE SCRIPT URL BELOW ---
+        const scriptURL = 'INSERT_YOUR_GOOGLE_SCRIPT_URL_HERE';
+        // ------------------------------------------
+
+        const form = document.forms['submit-to-google-sheet'];
+        const loadingMsg = document.getElementById('loading');
+        const btn = document.querySelector('.btn-start');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            // Show loading state
+            loadingMsg.style.display = 'block';
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+            .then(response => {
+                console.log('Success!', response);
+                // Redirect to the next page of your quiz here
+                // window.location.href = "question1.html"; 
+                alert("Connected! The assessment would start here.");
+                
+                // Reset form state
+                loadingMsg.style.display = 'none';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                loadingMsg.innerText = "Error connecting to server.";
+            });
+        });
+    </script>
 
 </body>
 </html>
