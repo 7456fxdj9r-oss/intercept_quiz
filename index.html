@@ -60,17 +60,14 @@
             position: fixed; top: 0; width: 100%; z-index: 100;
         }
 
+        /* UPDATED LOGO STYLES */
         .brand-logo {
-            display: flex; align-items: center; gap: 10px;
-            font-family: 'Oswald', sans-serif;
-            font-weight: 700; font-size: 20px; letter-spacing: 1px;
-            text-transform: uppercase; color: white;
+            display: flex; align-items: center;
         }
         
-        .shield-icon {
-            width: 24px; height: 28px;
-            background: white; 
-            clip-path: polygon(50% 0, 100% 20%, 100% 80%, 50% 100%, 0 80%, 0 20%);
+        .logo-image {
+            height: 40px; /* Sets the logo height to fit the header */
+            width: auto;
         }
 
         .btn-exit {
@@ -213,7 +210,7 @@
             position: relative; overflow: hidden;
             background-image: linear-gradient(135deg, #1B2230, #232d3f);
             cursor: pointer;
-            pointer-events: auto; /* Ensures touch is registered */
+            pointer-events: auto; 
         }
         
         .play-btn {
@@ -222,7 +219,7 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 24px; color: var(--accent-yellow);
             transition: transform 0.2s;
-            pointer-events: none; /* Let clicks pass through to the box */
+            pointer-events: none; 
         }
         .video-box:hover .play-btn { transform: scale(1.1); background: rgba(255,255,255,0.2); }
         
@@ -240,8 +237,7 @@
 
     <header>
         <div class="brand-logo">
-            <div class="shield-icon"></div>
-            INTERCEPT
+            <img src="intercept-logo.png" alt="INTERCEPT Logo" class="logo-image">
         </div>
         <a href="https://www.google.com" class="btn-exit">Quick Exit ✕</a>
     </header>
