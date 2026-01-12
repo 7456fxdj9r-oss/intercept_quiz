@@ -60,14 +60,16 @@
             position: fixed; top: 0; width: 100%; z-index: 100;
         }
 
-        /* UPDATED LOGO STYLES */
         .brand-logo {
-            display: flex; align-items: center;
+            display: flex; align-items: center; gap: 10px;
+            /* Font styles removed since we are using an image now */
         }
         
-        .logo-image {
-            height: 40px; /* Sets the logo height to fit the header */
-            width: auto;
+        /* NEW LOGO IMAGE STYLE */
+        .logo-img {
+            height: 40px; /* Constrains height to fit header */
+            width: auto;  /* Maintains aspect ratio */
+            display: block;
         }
 
         .btn-exit {
@@ -197,7 +199,7 @@
             margin-bottom: 16px; letter-spacing: 1px;
         }
 
-        /* --- VIDEO BOX: MOBILE OPTIMIZED --- */
+        /* --- VIDEO BOX --- */
         .video-box {
             width: 100%;
             max-width: 350px; 
@@ -237,7 +239,7 @@
 
     <header>
         <div class="brand-logo">
-            <img src="intercept-logo.png" alt="INTERCEPT Logo" class="logo-image">
+            <img src="intercept-logo.png" alt="INTERCEPT" class="logo-img">
         </div>
         <a href="https://www.google.com" class="btn-exit">Quick Exit ✕</a>
     </header>
