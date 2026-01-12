@@ -118,11 +118,13 @@
             background: rgba(0,0,0,0.2); padding: 8px; border-radius: 4px;
         }
 
-        /* --- MAIN VIEWPORT --- */
+        /* --- MAIN VIEWPORT (UPDATED PADDING) --- */
         main {
             flex: 1; margin-top: 70px;
             position: relative; overflow-y: auto; overflow-x: hidden;
-            padding: 24px; max-width: 550px; width: 100%;
+            /* FIXED: Increased bottom padding to 100px so buttons aren't cut off on Android */
+            padding: 24px 24px 100px 24px; 
+            max-width: 550px; width: 100%;
             margin-left: auto; margin-right: auto;
         }
 
