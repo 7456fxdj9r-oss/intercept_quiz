@@ -351,15 +351,16 @@
     <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec";
-
-        // --- VIDEO CONFIGURATION ---
-        const VIDEOS = {
-            husband: 'FbFDHg_j47k',  // LINKED TO YOUR YOUTUBE SHORT
+        // --- CONFIGURATION ---
+        var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec";
+        
+        var VIDEOS = {
+            husband: 'FbFDHg_j47k',  // Your YouTube Short ID
             wife: 'PASTE_WIFE_VIDEO_ID_HERE'
         };
 
-        const app = {
+        // --- APP LOGIC (Fixed with 'var' for global scope) ---
+        var app = {
             data: {
                 currentQ: 0,
                 score: 0,
@@ -382,81 +383,171 @@
                 }
             },
 
-            goto: (viewId) => {
-                document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            goto: function(viewId) {
+                document.querySelectorAll('.view').forEach(function(el) { el.classList.remove('active'); });
                 document.getElementById(viewId).classList.add('active');
-                const prog = document.getElementById('progress-container');
+                var prog = document.getElementById('progress-container');
                 viewId === 'view-questions' ? prog.classList.remove('hidden') : prog.classList.add('hidden');
             },
 
-            startCheck: (type) => {
+            startCheck: function(type) {
                 app.data.path = type; app.data.currentQ = 0; app.data.score = 0;
                 app.renderQuestion(); app.goto('view-questions');
             },
 
-            renderQuestion: () => {
-                const qSet = app.data.questions[app.data.path];
-                const q = qSet[app.data.currentQ];
-                document.getElementById('q-category').innerText = `${app.data.currentQ + 1}/5 • ${q.cat}`;
+            renderQuestion: function() {
+                var qSet = app.data.questions[app.data.path];
+                var q = qSet[app.data.currentQ];
+                document.getElementById('q-category').innerText = (app.data.currentQ + 1) + "/5 • " + q.cat;
                 document.getElementById('q-text').innerText = q.txt;
-                document.getElementById('progress-bar').style.width = `${(app.data.currentQ / 5) * 100}%`;
-                const container = document.getElementById('q-options');
+                document.getElementById('progress-bar').style.width = ((app.data.currentQ / 5) * 100) + "%";
+                var container = document.getElementById('q-options');
                 container.innerHTML = '';
-                q.opts.forEach(opt => {
-                    const btn = document.createElement('div');
+                q.opts.forEach(function(opt) {
+                    var btn = document.createElement('div');
                     btn.className = 'option-card';
-                    btn.innerHTML = `<span>${opt.t}</span>`;
-                    btn.onclick = () => app.handleAnswer(opt.v);
+                    btn.innerHTML = "<span>" + opt.t + "</span>";
+                    btn.onclick = function() { app.handleAnswer(opt.v); };
                     container.appendChild(btn);
                 });
             },
 
-            handleAnswer: (val) => {
+            handleAnswer: function(val) {
                 app.data.score += val;
                 app.data.currentQ++;
                 if (app.data.currentQ < app.data.questions[app.data.path].length) app.renderQuestion();
                 else app.finish();
             },
 
-            finish: () => {
+            finish: function() {
                 document.getElementById('progress-bar').style.width = '100%';
                 app.goto('view-loading');
-                setTimeout(() => app.showResults(), 2000);
+                setTimeout(function() { app.showResults(); }, 2000);
             },
 
-            playVideo: () => {
-                const vidId = VIDEOS[app.data.path];
+            playVideo: function() {
+                var vidId = VIDEOS[app.data.path];
                 if (!vidId || vidId.includes('PASTE')) {
                     alert("Video coming soon."); 
                     return; 
                 }
-                const box = document.getElementById('result-video-box');
-                box.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${vidId}?autoplay=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                var box = document.getElementById('result-video-box');
+                box.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
             },
 
-            showResults: () => {
+            showResults: function() {
                 app.goto('view-results');
-                const score = app.data.score; 
-                const path = app.data.path;
-                const isHigh = score >= 16;
-                const isLow = score <= 8;
+                var score = app.data.score; 
+                var path = app.data.path;
+                var isHigh = score >= 16;
+                var isLow = score <= 8;
 
-                const badge = document.getElementById('res-badge');
-                const title = document.getElementById('res-title');
-                const desc = document.getElementById('res-desc');
-                const resBox = document.getElementById('res-container');
-                const btn1 = document.getElementById('btn-cta-1');
-                const btn2 = document.getElementById('btn-cta-2');
-                const vidLabel = document.getElementById('video-label');
-
+                var badge = document.getElementById('res-badge');
+                var title = document.getElementById('res-title');
+                var desc = document.getElementById('res-desc');
+                var resBox = document.getElementById('res-container');
+                var btn1 = document.getElementById('btn-cta-1');
+                var btn2 = document.getElementById('btn-cta-2');
+                
                 // Reset Video Box
                 document.getElementById('result-video-box').innerHTML = '<div class="play-btn">▶</div><div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>';
 
-                btn1.onclick = () => window.location.href = 'https://www.intercept.works/take-action';
+                btn1.onclick = function() { window.location.href = 'https://www.intercept.works/take-action'; };
                 btn2.innerText = "CONNECT WITH A GUIDE";
-                btn2.onclick = () => app.openModal();
+                btn2.onclick = function() { app.openModal(); };
                 btn2.className = "btn btn-ghost";
 
                 if (path === 'wife') {
                     document.getElementById('video-label').innerText = "MESSAGE FROM BRIT (3 MIN)";
                     if (isLow) {
+                        badge.innerText = "STATUS: HEALTHY CLARITY"; badge.style.background = "var(--status-green)"; badge.style.color = "#064e3b";
+                        title.innerHTML = "YOU ARE <span class='highlight-green'>SECURE.</span>";
+                        desc.innerText = "Your reflection suggests transparency. Sadly, many wives around you are suffering in silence. Learn about Intercept so you can be a safe resource for friends who need answers.";
+                        resBox.style.borderLeftColor = "var(--status-green)"; btn1.innerText = "LEARN TO HELP"; btn1.className = "btn btn-green";
+                    } else if (isHigh) {
+                        badge.innerText = "STATUS: HIGH CLARITY"; badge.style.background = "var(--accent-yellow)"; badge.style.color = "black";
+                        title.innerHTML = "YOUR INSTINCTS<br><span class='highlight'>ARE STRONG.</span>";
+                        desc.innerText = "Your score indicates a significant breakdown in transparency. You deserve partnership, not secrecy.";
+                        resBox.style.borderLeftColor = "var(--accent-yellow)"; btn1.innerText = "TAKE ACTION"; btn1.className = "btn btn-primary";
+                    } else {
+                        badge.innerText = "STATUS: ELEVATED CONCERN"; badge.style.background = "var(--accent-yellow)"; badge.style.color = "black";
+                        title.innerHTML = "YOU ARE NOT<br><span class='highlight'>IMAGINING THINGS.</span>";
+                        desc.innerText = "Your reflections suggest early indicators of disconnection. This is not a diagnosis, but your confusion is valid.";
+                        resBox.style.borderLeftColor = "var(--accent-yellow)"; btn1.innerText = "EXPLORE INTERCEPT"; btn1.className = "btn btn-primary";
+                    }
+                }
+
+                if (path === 'husband') {
+                    document.getElementById('video-label').innerText = "MESSAGE FROM CRAIG (3 MIN)";
+                    if (isLow) {
+                        badge.innerText = "STATUS: STANDING FIRM"; badge.style.background = "var(--status-green)"; badge.style.color = "#064e3b";
+                        title.innerHTML = "YOU ARE IN <span class='highlight-green'>THE FIGHT.</span>";
+                        desc.innerText = "You are walking in freedom. But porn is killing men around you. Your friends are struggling. Learn to help.";
+                        resBox.style.borderLeftColor = "var(--status-green)"; btn1.innerText = "LEARN TO HELP"; btn1.className = "btn btn-green";
+                    } else if (isHigh) {
+                        badge.innerText = "STATUS: CRITICAL"; badge.style.background = "var(--accent-yellow)"; badge.style.color = "black";
+                        title.innerHTML = "IT IS TIME TO<br><span class='highlight'>FIGHT BACK.</span>";
+                        desc.innerText = "You are caught in a cycle of secrecy. You cannot win alone. Take ownership and get your life back.";
+                        resBox.style.borderLeftColor = "var(--accent-yellow)"; 
+                        btn1.innerText = "LET'S END THIS"; 
+                        btn1.className = "btn btn-primary";
+                    } else {
+                        badge.innerText = "STATUS: WARNING"; badge.style.background = "var(--accent-yellow)"; badge.style.color = "black";
+                        title.innerHTML = "DON'T LET YOUR<br><span class='highlight'>GUARD DOWN.</span>";
+                        desc.innerText = "Isolation is dangerous. Stay sharp. Intercept provides the tools to end destructive behavior.";
+                        resBox.style.borderLeftColor = "var(--accent-yellow)"; btn1.innerText = "STRENGTHEN YOUR WALK"; btn1.className = "btn btn-primary";
+                    }
+                }
+            },
+
+            openModal: function() { document.getElementById('guide-modal').classList.add('open'); },
+            closeModal: function() { document.getElementById('guide-modal').classList.remove('open'); },
+
+            submitContact: function(e) {
+                e.preventDefault();
+                var btn = document.getElementById('btn-submit');
+                var successMsg = document.getElementById('contact-success');
+                var name = document.getElementById('contact-name').value;
+                var phone = document.getElementById('contact-phone').value;
+                var email = document.getElementById('contact-email').value;
+
+                if (!name && !phone && !email) {
+                    alert("Please provide at least one way for us to contact you (Email, Phone, or Name).");
+                    return;
+                }
+                
+                btn.innerText = "SENDING...";
+                btn.disabled = true;
+
+                var formData = {
+                    role: app.data.path,
+                    score: app.data.score,
+                    name: name || "Not Provided",
+                    phone: phone || "Not Provided",
+                    email: email || "Not Provided"
+                };
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                .then(function() {
+                    successMsg.classList.remove('hidden');
+                    btn.innerText = "SENT";
+                })
+                .catch(function(err) {
+                    alert("Unable to send. Please check your connection.");
+                    btn.disabled = false;
+                    btn.innerText = "TRY AGAIN";
+                });
+            }
+        };
+        
+        // --- ENSURE APP IS GLOBAL ---
+        window.app = app;
+        console.log("Intercept App Loaded v1.2");
+    </script>
+</body>
+</html>
