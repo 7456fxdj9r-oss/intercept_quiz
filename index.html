@@ -351,16 +351,17 @@
     <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
 
     <script>
-        // --- CONFIGURATION ---
+    // --- SAFE START WRAPPER ---
+    try {
         var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec";
         
         var VIDEOS = {
-            husband: 'FbFDHg_j47k',  // Your YouTube Short ID
+            husband: 'FbFDHg_j47k',  
             wife: 'PASTE_WIFE_VIDEO_ID_HERE'
         };
 
-        // --- APP LOGIC (Fixed with 'var' for global scope) ---
-        var app = {
+        // We attach 'app' directly to window to ensure global scope visibility
+        window.app = {
             data: {
                 currentQ: 0,
                 score: 0,
@@ -449,7 +450,6 @@
                 var btn1 = document.getElementById('btn-cta-1');
                 var btn2 = document.getElementById('btn-cta-2');
                 
-                // Reset Video Box
                 document.getElementById('result-video-box').innerHTML = '<div class="play-btn">▶</div><div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>';
 
                 btn1.onclick = function() { window.location.href = 'https://www.intercept.works/take-action'; };
@@ -544,10 +544,11 @@
                 });
             }
         };
-        
-        // --- ENSURE APP IS GLOBAL ---
-        window.app = app;
-        console.log("Intercept App Loaded v1.2");
+        console.log("INTERCEPT: App loaded successfully.");
+    } catch (e) {
+        console.error("INTERCEPT: Script Crash:", e);
+        alert("System Error: The application script failed to load. Please refresh.");
+    }
     </script>
 </body>
 </html>
