@@ -200,7 +200,7 @@
             margin-bottom: 16px; letter-spacing: 1px;
         }
 
-        /* --- VIDEO BOX --- */
+        /* --- VIDEO BOX: MOBILE OPTIMIZED --- */
         .video-box {
             width: 100%;
             max-width: 350px; 
@@ -213,6 +213,7 @@
             position: relative; overflow: hidden;
             background-image: linear-gradient(135deg, #1B2230, #232d3f);
             cursor: pointer;
+            pointer-events: auto; /* Ensures touch is registered */
         }
         
         .play-btn {
@@ -221,6 +222,7 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 24px; color: var(--accent-yellow);
             transition: transform 0.2s;
+            pointer-events: none; /* Let clicks pass through to the box */
         }
         .video-box:hover .play-btn { transform: scale(1.1); background: rgba(255,255,255,0.2); }
         
@@ -338,7 +340,7 @@
             <div id="res-badge" class="badge">STATUS</div>
             <h1 id="res-title">TITLE HERE</h1>
             
-            <div class="video-box" id="result-video-box" onclick="app.playVideo()">
+            <div class="video-box" id="result-video-box">
                 <div class="play-btn">▶</div>
                 <div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>
             </div>
@@ -367,7 +369,7 @@
             wife: 'PASTE_WIFE_VIDEO_ID_HERE'
         };
 
-        // We attach 'app' directly to window to ensure global scope visibility
+        // GLOBAL APP OBJECT
         window.app = {
             data: {
                 currentQ: 0,
@@ -440,8 +442,8 @@
                     return; 
                 }
                 var box = document.getElementById('result-video-box');
-                // FORCE AUTOPLAY: Added mute=1 which allows mobile autoplay
-                box.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&mute=1&rel=0&playsinline=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                // Added playsinline AND mute=1 to guarantee mobile autoplay
+                box.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&mute=1&rel=0&playsinline=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen playsinline></iframe>';
             },
 
             showResults: function() {
@@ -458,7 +460,11 @@
                 var btn1 = document.getElementById('btn-cta-1');
                 var btn2 = document.getElementById('btn-cta-2');
                 
+                // RESET VIDEO BOX - IMPORTANT for multiple runs
                 document.getElementById('result-video-box').innerHTML = '<div class="play-btn">▶</div><div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>';
+
+                // RE-ATTACH LISTENER because we just wiped the innerHTML
+                document.getElementById('result-video-box').onclick = function() { app.playVideo(); };
 
                 btn1.onclick = function() { window.location.href = 'https://www.intercept.works/take-action'; };
                 btn2.innerText = "CONNECT WITH A GUIDE";
@@ -552,6 +558,16 @@
                 });
             }
         };
+        
+        // --- ATTACH LISTENER ---
+        // This ensures the click handler is attached after the DOM loads
+        window.onload = function() {
+            var box = document.getElementById('result-video-box');
+            if(box) {
+                box.onclick = function() { app.playVideo(); };
+            }
+        };
+        
         console.log("INTERCEPT: App loaded successfully.");
     } catch (e) {
         console.error("INTERCEPT: Script Crash:", e);
