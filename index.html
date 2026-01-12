@@ -13,7 +13,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 
     <style>
         /* --- THEME ENGINE --- */
@@ -26,6 +26,7 @@
             
             --accent-yellow: #FBBF24;
             --status-green: #10b981;
+            --status-red: #ef4444;
             
             --btn-blue: #2c4f7c;
             --border-color: #2e3646;
@@ -60,17 +61,8 @@
             position: fixed; top: 0; width: 100%; z-index: 100;
         }
 
-        .brand-logo {
-            display: flex; align-items: center; gap: 10px;
-            /* Font styles removed since we are using an image now */
-        }
-        
-        /* NEW LOGO IMAGE STYLE */
-        .logo-img {
-            height: 40px; /* Constrains height to fit header */
-            width: auto;  /* Maintains aspect ratio */
-            display: block;
-        }
+        .brand-logo { display: flex; align-items: center; }
+        .logo-img { height: 40px; width: auto; display: block; }
 
         .btn-exit {
             font-size: 11px; font-weight: 700; text-transform: uppercase;
@@ -99,7 +91,7 @@
         }
         .modal-overlay.open .modal-card { transform: translateY(0); }
 
-        /* Modal Specific Styles */
+        /* Modal Styles */
         .contact-section { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
         .contact-choice-title { font-size: 14px; font-weight: 700; color: var(--accent-yellow); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px; }
         
@@ -134,16 +126,10 @@
             margin-left: auto; margin-right: auto;
         }
 
-        /* --- HERO IMAGE STYLE --- */
         .hero-image {
-            width: 100%;
-            height: auto;
-            max-height: 250px;
-            object-fit: cover;
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border: 1px solid var(--border-color);
+            width: 100%; height: auto; max-height: 250px; object-fit: cover;
+            border-radius: var(--radius); margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid var(--border-color);
             display: block; 
         }
 
@@ -201,30 +187,78 @@
 
         /* --- VIDEO BOX --- */
         .video-box {
-            width: 100%;
-            max-width: 350px; 
-            aspect-ratio: 9/16; 
-            max-height: 65vh; 
-            background: #000;
-            border-radius: 8px; border: 1px solid var(--border-color);
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 24px auto; 
-            position: relative; overflow: hidden;
+            width: 100%; max-width: 350px; 
+            aspect-ratio: 9/16; max-height: 60vh; 
+            background: #000; border-radius: 8px; border: 1px solid var(--border-color);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin: 0 auto 24px auto; position: relative; overflow: hidden;
             background-image: linear-gradient(135deg, #1B2230, #232d3f);
-            cursor: pointer;
-            pointer-events: auto; 
+            cursor: pointer; pointer-events: auto; 
         }
-        
-        .play-btn {
-            width: 64px; height: 64px; border-radius: 50%;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: var(--accent-yellow);
-            transition: transform 0.2s;
-            pointer-events: none; 
+        .unmute-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 10;
+            backdrop-filter: blur(2px);
         }
-        .video-box:hover .play-btn { transform: scale(1.1); background: rgba(255,255,255,0.2); }
+        .unmute-btn {
+            background: rgba(255,255,255,0.9); color: #1B2230;
+            padding: 12px 24px; border-radius: 50px;
+            font-family: 'Oswald', sans-serif; font-size: 16px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.2s; text-transform: uppercase;
+        }
+        .video-box:active .unmute-btn { transform: scale(0.95); }
+
+        /* --- NEW: SEVERITY METER --- */
+        .severity-container {
+            margin-bottom: 30px;
+            background: var(--card-navy);
+            padding: 20px; border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .meter-label-row {
+            display: flex; justify-content: space-between; 
+            margin-bottom: 8px; font-size: 12px; font-weight: 700; color: var(--text-slate);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .meter-bar-bg {
+            height: 12px; width: 100%; border-radius: 50px;
+            background: linear-gradient(90deg, #10b981 0%, #FBBF24 50%, #ef4444 100%);
+            position: relative;
+        }
+        .meter-marker {
+            position: absolute; top: -6px; width: 4px; height: 24px;
+            background: white; border: 1px solid black; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            transition: left 1s ease-out;
+            transform: translateX(-50%); /* Center marker */
+        }
+        .current-score-text {
+            text-align: center; margin-top: 10px; font-size: 13px; color: white;
+        }
+
+        /* --- NEW: REALITY OF CHANGE --- */
+        .reality-section {
+            display: flex; gap: 10px; margin-bottom: 24px;
+        }
+        .reality-card {
+            flex: 1; padding: 15px; border-radius: 8px;
+            border: 1px solid var(--border-color); background: rgba(0,0,0,0.2);
+        }
+        .reality-title {
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            margin-bottom: 8px; display: block; border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 5px;
+        }
+        .reality-list {
+            list-style: none; padding: 0; margin: 0; font-size: 12px; color: var(--text-slate);
+        }
+        .reality-list li { margin-bottom: 6px; line-height: 1.4; }
         
+        .path-bad { border-top: 3px solid var(--status-red); }
+        .path-good { border-top: 3px solid var(--accent-yellow); background: var(--card-navy); }
+
         .progress-rail {
             position: fixed; top: 70px; left: 0; width: 100%; height: 4px;
             background: var(--bg-navy); z-index: 90;
@@ -251,61 +285,40 @@
             <p style="font-size: 14px; margin-bottom: 20px; color: var(--text-slate);">
                 You are in control. Choose how you want to connect.
             </p>
-            
             <div class="contact-section">
                 <div class="contact-choice-title">Option 1: Contact Us Directly</div>
                 <a href="tel:9719989285" class="direct-link">📞 Call Monty: (971) 998-9285</a>
                 <a href="mailto:support@intercept.works" class="direct-link">✉️ Email: support@intercept.works</a>
             </div>
-
             <div class="contact-section" style="border-bottom: none; padding-bottom: 0;">
                 <div class="contact-choice-title">Option 2: We Contact You</div>
                 <p style="font-size: 12px; margin-bottom: 15px;">Fill out what you are comfortable with. We will reach out within 24 hours.</p>
-                
                 <form onsubmit="app.submitContact(event)">
-                    <div class="input-group">
-                        <label>Name (Optional)</label>
-                        <input type="text" id="contact-name" class="modal-input" placeholder="First Name or Pseudonym">
-                    </div>
-                    <div class="input-group">
-                        <label>Phone (Optional)</label>
-                        <input type="tel" id="contact-phone" class="modal-input" placeholder="(555) 555-5555">
-                    </div>
-                    <div class="input-group">
-                        <label>Email (Optional)</label>
-                        <input type="email" id="contact-email" class="modal-input" placeholder="you@example.com">
-                    </div>
-                    
+                    <div class="input-group"><label>Name</label><input type="text" id="contact-name" class="modal-input"></div>
+                    <div class="input-group"><label>Phone</label><input type="tel" id="contact-phone" class="modal-input"></div>
+                    <div class="input-group"><label>Email</label><input type="email" id="contact-email" class="modal-input"></div>
                     <button type="submit" id="btn-submit" class="btn btn-primary">REQUEST CONTACT</button>
                 </form>
-                
                 <div id="contact-success" class="hidden">
                     <p style="color: var(--status-green); font-weight: bold; margin-top:15px;">Request Received. We will be in touch.</p>
                 </div>
-
-                <div class="security-note">
-                    🔒 <strong>Secure & Confidential:</strong> Your information is transmitted securely and accessed only by our Care Team. We never share your data.
-                </div>
+                <div class="security-note">🔒 <strong>Secure & Confidential:</strong> Your information is transmitted securely.</div>
             </div>
-
             <button class="btn btn-ghost" style="margin-top:10px;" onclick="app.closeModal()">CLOSE WINDOW</button>
         </div>
     </div>
 
-    <div class="progress-rail hidden" id="progress-container">
-        <div class="progress-fill" id="progress-bar"></div>
-    </div>
+    <div class="progress-rail hidden" id="progress-container"><div class="progress-fill" id="progress-bar"></div></div>
 
     <main>
         
         <div id="view-welcome" class="view active center-v">
             <img src="hero-image.png" alt="Welcome" class="hero-image">
-            
             <div class="badge">Confidential Check v1.0</div>
             <h1>RELATIONAL<br>INTEGRITY CHECK</h1>
             <p>A private tool to assess risk, find clarity, and take action.</p>
             <div class="privacy-note">
-                <strong>🔒 Private & Discreet:</strong> No names required. Results are not stored unless you choose to share them at the end.
+                <strong>🔒 Private & Discreet:</strong> No names required. Results are not stored unless you choose to share them.
             </div>
             <br>
             <button class="btn btn-primary" onclick="app.goto('view-identity')">START REFLECTION</button>
@@ -313,12 +326,8 @@
 
         <div id="view-identity" class="view center-v">
             <h2>Who are you?</h2>
-            <div class="option-card" onclick="app.startCheck('wife')">
-                <span>Wife / Partner</span><span style="color:var(--accent-yellow);">→</span>
-            </div>
-            <div class="option-card" onclick="app.startCheck('husband')">
-                <span>Husband / Man</span><span style="color:var(--text-blue-grey);">→</span>
-            </div>
+            <div class="option-card" onclick="app.startCheck('wife')"><span>Wife / Partner</span><span style="color:var(--accent-yellow);">→</span></div>
+            <div class="option-card" onclick="app.startCheck('husband')"><span>Husband / Man</span><span style="color:var(--text-blue-grey);">→</span></div>
             <button class="btn btn-ghost" onclick="app.goto('view-welcome')">Go Back</button>
         </div>
 
@@ -337,10 +346,43 @@
         <div id="view-results" class="view">
             <div id="res-badge" class="badge">STATUS</div>
             <h1 id="res-title">TITLE HERE</h1>
+
+            <div class="severity-container">
+                <div class="meter-label-row">
+                    <span>Healthy</span>
+                    <span>Caution</span>
+                    <span style="color:var(--status-red)">Critical</span>
+                </div>
+                <div class="meter-bar-bg">
+                    <div id="meter-marker" class="meter-marker" style="left: 0%;"></div>
+                </div>
+                <div id="severity-text" class="current-score-text">Your Risk Level: Analyzing...</div>
+            </div>
             
             <div class="video-box" id="result-video-box">
-                <div class="play-btn">▶</div>
-                <div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>
+                <div class="unmute-overlay">
+                    <div class="unmute-btn">🔊 TAP TO UNMUTE</div>
+                    <div style="margin-top:8px; font-size:12px; font-weight:600; letter-spacing:1px; color:rgba(255,255,255,0.7);">WATCH MESSAGE</div>
+                </div>
+            </div>
+
+            <div class="reality-section">
+                <div class="reality-card path-bad">
+                    <span class="reality-title" style="color:var(--status-red);">IF NOTHING CHANGES</span>
+                    <ul class="reality-list">
+                        <li>• Isolation increases</li>
+                        <li>• Trust erodes further</li>
+                        <li>• Cycle repeats</li>
+                    </ul>
+                </div>
+                <div class="reality-card path-good">
+                    <span class="reality-title" style="color:var(--accent-yellow);">THE INTERCEPT PATH</span>
+                    <ul class="reality-list">
+                        <li>• Full Disclosure</li>
+                        <li>• Rebuilt Trust</li>
+                        <li>• Freedom & Legacy</li>
+                    </ul>
+                </div>
             </div>
 
             <div id="res-container" style="background:var(--card-navy); padding:20px; border-radius:8px; border-left:4px solid var(--accent-yellow); margin-bottom:24px;">
@@ -358,7 +400,6 @@
     <style> @keyframes spin { to { transform: rotate(360deg); } } </style>
 
     <script>
-    // --- SAFE START WRAPPER ---
     try {
         var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz99J0JUHejR9ryV2alNVY8IjtN8kLG6loiRwai6MJNy-bc4OGsmdMrxj3yFOjBM-yT/exec";
         
@@ -367,7 +408,6 @@
             wife: 'PASTE_WIFE_VIDEO_ID_HERE'
         };
 
-        // GLOBAL APP OBJECT
         window.app = {
             data: {
                 currentQ: 0,
@@ -435,13 +475,9 @@
 
             playVideo: function() {
                 var vidId = VIDEOS[app.data.path];
-                if (!vidId || vidId.includes('PASTE')) {
-                    alert("Video coming soon."); 
-                    return; 
-                }
+                if (!vidId || vidId.includes('PASTE')) { alert("Video coming soon."); return; }
                 var box = document.getElementById('result-video-box');
-                // Added playsinline AND mute=1 to guarantee mobile autoplay
-                box.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&mute=1&rel=0&playsinline=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen playsinline></iframe>';
+                box.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&rel=0&playsinline=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
             },
 
             showResults: function() {
@@ -451,6 +487,18 @@
                 var isHigh = score >= 16;
                 var isLow = score <= 8;
 
+                // --- METER LOGIC ---
+                var maxScore = 25; 
+                var minScore = 5;
+                var percent = ((score - minScore) / (maxScore - minScore)) * 100;
+                if(percent < 0) percent = 0; if(percent > 100) percent = 100;
+                document.getElementById('meter-marker').style.left = percent + "%";
+                
+                var severityText = "Moderate Concern";
+                if(isLow) severityText = "Low Risk / Healthy";
+                else if(isHigh) severityText = "High Risk / Critical";
+                document.getElementById('severity-text').innerText = "Risk Level: " + severityText;
+
                 var badge = document.getElementById('res-badge');
                 var title = document.getElementById('res-title');
                 var desc = document.getElementById('res-desc');
@@ -458,10 +506,9 @@
                 var btn1 = document.getElementById('btn-cta-1');
                 var btn2 = document.getElementById('btn-cta-2');
                 
-                // RESET VIDEO BOX - IMPORTANT for multiple runs
-                document.getElementById('result-video-box').innerHTML = '<div class="play-btn">▶</div><div id="video-label" style="position:absolute; bottom:15px; font-size:12px; font-weight:600; color:white; letter-spacing: 0.5px;">MESSAGE</div>';
-
-                // RE-ATTACH LISTENER because we just wiped the innerHTML
+                // Reset Video
+                var overlayHTML = '<div class="unmute-overlay"><div class="unmute-btn">🔊 TAP TO UNMUTE</div><div style="margin-top:8px; font-size:12px; font-weight:600; letter-spacing:1px; color:rgba(255,255,255,0.7);">WATCH MESSAGE</div></div>';
+                document.getElementById('result-video-box').innerHTML = overlayHTML;
                 document.getElementById('result-video-box').onclick = function() { app.playVideo(); };
 
                 btn1.onclick = function() { window.location.href = 'https://www.intercept.works/take-action'; };
@@ -470,11 +517,10 @@
                 btn2.className = "btn btn-ghost";
 
                 if (path === 'wife') {
-                    document.getElementById('video-label').innerText = "MESSAGE FROM BRIT (3 MIN)";
                     if (isLow) {
                         badge.innerText = "STATUS: HEALTHY CLARITY"; badge.style.background = "var(--status-green)"; badge.style.color = "#064e3b";
                         title.innerHTML = "YOU ARE <span class='highlight-green'>SECURE.</span>";
-                        desc.innerText = "Your reflection suggests transparency. Sadly, many wives around you are suffering in silence. Learn about Intercept so you can be a safe resource for friends who need answers.";
+                        desc.innerText = "Your reflection suggests transparency. Sadly, many wives around you are suffering in silence. Learn about Intercept so you can be a safe resource.";
                         resBox.style.borderLeftColor = "var(--status-green)"; btn1.innerText = "LEARN TO HELP"; btn1.className = "btn btn-green";
                     } else if (isHigh) {
                         badge.innerText = "STATUS: HIGH CLARITY"; badge.style.background = "var(--accent-yellow)"; badge.style.color = "black";
@@ -490,7 +536,6 @@
                 }
 
                 if (path === 'husband') {
-                    document.getElementById('video-label').innerText = "MESSAGE FROM CRAIG (3 MIN)";
                     if (isLow) {
                         badge.innerText = "STATUS: STANDING FIRM"; badge.style.background = "var(--status-green)"; badge.style.color = "#064e3b";
                         title.innerHTML = "YOU ARE IN <span class='highlight-green'>THE FIGHT.</span>";
@@ -523,50 +568,29 @@
                 var phone = document.getElementById('contact-phone').value;
                 var email = document.getElementById('contact-email').value;
 
-                if (!name && !phone && !email) {
-                    alert("Please provide at least one way for us to contact you (Email, Phone, or Name).");
-                    return;
-                }
+                if (!name && !phone && !email) { alert("Please provide at least one way for us to contact you."); return; }
                 
-                btn.innerText = "SENDING...";
-                btn.disabled = true;
+                btn.innerText = "SENDING..."; btn.disabled = true;
 
                 var formData = {
-                    role: app.data.path,
-                    score: app.data.score,
-                    name: name || "Not Provided",
-                    phone: phone || "Not Provided",
-                    email: email || "Not Provided"
+                    role: app.data.path, score: app.data.score,
+                    name: name || "Not Provided", phone: phone || "Not Provided", email: email || "Not Provided"
                 };
 
                 fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
+                    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData)
                 })
-                .then(function() {
-                    successMsg.classList.remove('hidden');
-                    btn.innerText = "SENT";
-                })
-                .catch(function(err) {
-                    alert("Unable to send. Please check your connection.");
-                    btn.disabled = false;
-                    btn.innerText = "TRY AGAIN";
-                });
+                .then(function() { successMsg.classList.remove('hidden'); btn.innerText = "SENT"; })
+                .catch(function(err) { alert("Unable to send. Please check your connection."); btn.disabled = false; btn.innerText = "TRY AGAIN"; });
             }
         };
         
-        // --- ATTACH LISTENER ---
-        // This ensures the click handler is attached after the DOM loads
         window.onload = function() {
             var box = document.getElementById('result-video-box');
-            if(box) {
-                box.onclick = function() { app.playVideo(); };
-            }
+            if(box) { box.onclick = function() { app.playVideo(); }; }
         };
         
-        console.log("INTERCEPT: App loaded successfully.");
+        console.log("INTERCEPT: App loaded successfully v2.1");
     } catch (e) {
         console.error("INTERCEPT: Script Crash:", e);
         alert("System Error: The application script failed to load. Please refresh.");
