@@ -200,20 +200,21 @@
             margin-bottom: 16px; letter-spacing: 1px;
         }
 
+        /* --- VIDEO BOX --- */
         .video-box {
             width: 100%;
-            /* UPDATED: Ratio set to 9/16 for YouTube Shorts (Vertical).
-               If you ever switch to a standard landscape video, change this to 16/9.
-            */
-            aspect-ratio: 9/16;
-            max-height: 65vh; /* Prevents video from being too tall on some screens */
+            max-width: 350px; 
+            aspect-ratio: 9/16; /* Vertical Ratio */
+            max-height: 65vh; 
             background: #000;
             border-radius: 8px; border: 1px solid var(--border-color);
             display: flex; align-items: center; justify-content: center;
-            margin-bottom: 24px; position: relative; overflow: hidden;
+            margin: 0 auto 24px auto; 
+            position: relative; overflow: hidden;
             background-image: linear-gradient(135deg, #1B2230, #232d3f);
             cursor: pointer;
         }
+        
         .play-btn {
             width: 64px; height: 64px; border-radius: 50%;
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
@@ -439,8 +440,8 @@
                     return; 
                 }
                 var box = document.getElementById('result-video-box');
-                // Embed URL updated for Shorts compatibility
-                box.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                // FIXED: Autoplay set to 1, added allow attributes for autoplay
+                box.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/' + vidId + '?autoplay=1&rel=0&playsinline=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
             },
 
             showResults: function() {
