@@ -186,6 +186,16 @@
             margin-bottom: 16px; letter-spacing: 1px;
         }
 
+        /* Back Button Style */
+        .btn-back-nav {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); color: var(--text-slate);
+            border: none; cursor: pointer; margin-right: 10px;
+            font-size: 14px;
+        }
+        .btn-back-nav:hover { background: rgba(255,255,255,0.2); color: white; }
+
         /* --- VIDEO BOX --- */
         .video-box {
             width: 100%; max-width: 350px; 
@@ -333,7 +343,10 @@
         </div>
 
         <div id="view-questions" class="view">
-            <div id="q-category" class="badge" style="color:var(--accent-yellow); border-color:var(--accent-yellow);">CATEGORY</div>
+            <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                <button class="btn-back-nav" onclick="app.goBack()">←</button>
+                <div id="q-category" class="badge" style="color:var(--accent-yellow); border-color:var(--accent-yellow); margin-bottom: 0;">CATEGORY</div>
+            </div>
             <h1 id="q-text" style="font-size: 24px; text-transform: none;">Question text...</h1>
             <div id="q-options" style="margin-top: 30px;"></div>
         </div>
@@ -413,7 +426,8 @@
             data: {
                 currentQ: 0,
                 score: 0,
-                path: 'wife', 
+                path: 'wife',
+                history: [], // Stores previous question answers to allow "Undo"
                 questions: {
                     wife: [
                         { cat: "Digital Habits", txt: "When it comes to his devices, how would you describe the atmosphere?", opts: [{ v:1, t:"Totally open / Shared freely" }, { v:2, t:"Mostly open" }, { v:3, t:"Neutral / I don't really know" }, { v:4, t:"Guarded / Screens turned away" }, { v:5, t:"Secretive / Locked / Tense" }]},
@@ -440,8 +454,21 @@
             },
 
             startCheck: function(type) {
-                app.data.path = type; app.data.currentQ = 0; app.data.score = 0;
+                app.data.path = type; app.data.currentQ = 0; app.data.score = 0; app.data.history = [];
                 app.renderQuestion(); app.goto('view-questions');
+            },
+
+            goBack: function() {
+                if (app.data.currentQ > 0) {
+                    // Revert last answer score
+                    var lastScore = app.data.history.pop();
+                    app.data.score -= lastScore;
+                    app.data.currentQ--;
+                    app.renderQuestion();
+                } else {
+                    // Go back to identity selection if on first question
+                    app.goto('view-identity');
+                }
             },
 
             renderQuestion: function() {
@@ -462,6 +489,7 @@
             },
 
             handleAnswer: function(val) {
+                app.data.history.push(val); // Save score to history for back button
                 app.data.score += val;
                 app.data.currentQ++;
                 if (app.data.currentQ < app.data.questions[app.data.path].length) app.renderQuestion();
@@ -591,7 +619,7 @@
             if(box) { box.onclick = function() { app.playVideo(); }; }
         };
         
-        console.log("INTERCEPT: App loaded successfully v2.3");
+        console.log("INTERCEPT: App loaded successfully v2.4");
     } catch (e) {
         console.error("INTERCEPT: Script Crash:", e);
         alert("System Error: The application script failed to load. Please refresh.");
